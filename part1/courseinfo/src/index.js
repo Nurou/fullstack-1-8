@@ -14,20 +14,26 @@ const Header = props => {
   );
 };
 
+// Part component - building blocks for content
+
+const Part = props => {
+  return (
+    <div>
+      <p>
+        {props.courseName} {props.numberOfExercises}
+      </p>
+    </div>
+  );
+};
+
 // Content component - course info
 
 const Content = props => {
   return (
     <div>
-      <p>
-        {props.part1} {props.exercises1}
-      </p>
-      <p>
-        {props.part2} {props.exercises2}
-      </p>
-      <p>
-        {props.part3} {props.exercises3}
-      </p>
+      <Part courseName={props.part1} numberOfExercises={props.exercises1} />
+      <Part courseName={props.part2} numberOfExercises={props.exercises2} />
+      <Part courseName={props.part3} numberOfExercises={props.exercises3} />
     </div>
   );
 };
