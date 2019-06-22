@@ -17,10 +17,13 @@ const Header = props => {
 // Part component - building blocks for component
 
 const Part = props => {
+  const courseName = props.courseName;
+  const exerciseCount = props.exerciseCount;
+
   return (
     <div>
       <p>
-        {props.courseName} {props.numberOfExercises}
+        {courseName} {exerciseCount}
       </p>
     </div>
   );
@@ -38,9 +41,9 @@ const Content = props => {
   });
   return (
     <div>
-      <Part courseName={parts[0].name} numberOfExercises={parts[0].exercises} />
-      <Part courseName={parts[1].name} numberOfExercises={parts[1].exercises} />
-      <Part courseName={parts[2].name} numberOfExercises={parts[2].exercises} />
+      <Part courseName={parts[0].name} exerciseCount={parts[0].exercises} />
+      <Part courseName={parts[1].name} exerciseCount={parts[1].exercises} />
+      <Part courseName={parts[2].name} exerciseCount={parts[2].exercises} />
     </div>
   );
 };
@@ -48,13 +51,14 @@ const Content = props => {
 // Total component - total number of exercises
 
 const Total = props => {
+  const partOneExCount = props.parts[0].exercises;
+  const partTwoExCount = props.parts[1].exercises;
+  const partThreeExCount = props.parts[2].exercises;
+
   return (
     <div>
       <p>
-        Number of exercises{' '}
-        {props.parts[0].exercises +
-          props.parts[1].exercises +
-          props.parts[2].exercises}
+        Number of exercises {partOneExCount + partTwoExCount + partThreeExCount}
       </p>
     </div>
   );
