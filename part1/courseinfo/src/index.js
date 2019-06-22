@@ -7,9 +7,10 @@ They take in 'props' and return React elements */
 // Header component - page title
 
 const Header = props => {
+  const courseName = props.courseName;
   return (
     <div>
-      <h1>{props.course.name}</h1>
+      <h1>{courseName}</h1>
     </div>
   );
 };
@@ -33,17 +34,20 @@ const Part = props => {
 // Comprises of 3 parts, one for each course
 
 const Content = props => {
-  console.log(props);
-  const parts = [];
-  // gets parts array of objects as props
-  Object.keys(props).forEach(function(prop) {
-    parts.push(...props[prop]);
-  });
+  // const parts = [];
+  // // gets parts array of objects as props
+  // Object.keys(props).forEach(function(prop) {
+  //   parts.push(...props[prop]);
+  // });
+  const firstPart = props.parts[0];
+  const secondPart = props.parts[1];
+  const thirdPart = props.parts[2];
+
   return (
     <div>
-      <Part courseName={parts[0].name} exerciseCount={parts[0].exercises} />
-      <Part courseName={parts[1].name} exerciseCount={parts[1].exercises} />
-      <Part courseName={parts[2].name} exerciseCount={parts[2].exercises} />
+      <Part courseName={firstPart.name} exerciseCount={firstPart.exercises} />
+      <Part courseName={secondPart.name} exerciseCount={secondPart.exercises} />
+      <Part courseName={thirdPart.name} exerciseCount={thirdPart.exercises} />
     </div>
   );
 };
@@ -87,7 +91,7 @@ const App = () => {
 
   return (
     <div>
-      <Header course={course} />
+      <Header courseName={course.name} />
       <Content parts={course.parts} />
       <Total parts={course.parts} />
     </div>
