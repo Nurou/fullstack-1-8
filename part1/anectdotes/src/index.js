@@ -7,6 +7,25 @@ const Button = props => {
   return <button onClick={props.onClick}>{props.text}</button>;
 };
 
+const Header = props => {
+  return <h1>{props.text}</h1>;
+};
+
+const DisplayMostVoted = props => {
+  // extract votes array passed in
+  const votes = props.votes;
+  // get the index of the array element having the most votes
+  const indexOfMostVoted = votes.indexOf(Math.max(...votes));
+
+  return (
+    <div>
+      {anecdotes[indexOfMostVoted]}
+      <br />
+      has {votes[indexOfMostVoted]} votes
+    </div>
+  );
+};
+
 const App = props => {
   // quote selection is based on selected array index
   const [selected, setSelected] = useState(0);
@@ -17,18 +36,22 @@ const App = props => {
     setSelected(Math.floor(Math.random() * 5));
   };
 
+  // forbidden in React to mutate state directly (), hence
+  // why a copy of the array is used
   const voteForAnecdote = props => {
-    const newVotes = [...votes];
-    newVotes[props] += 1;
-    setVotes(newVotes);
+    const updatedVotes = [...votes];
+    updatedVotes[props] += 1;
+    setVotes(updatedVotes);
   };
 
   return (
     <div>
+      <Header text="Anecdote of the day" />
       {props.anecdotes[selected]}
-      <br />
       <Button onClick={() => voteForAnecdote(selected)} text="vote" />
       <Button onClick={() => selectRandomAnecdote()} text="next anecdote" />
+      <Header text="Anecdote with most votes" />
+      <DisplayMostVoted votes={votes} />
     </div>
   );
 };
