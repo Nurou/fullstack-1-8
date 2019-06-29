@@ -10,16 +10,24 @@ const Button = props => {
 const App = props => {
   // quote selection is based on selected array index
   const [selected, setSelected] = useState(0);
+  const [votes, setVotes] = useState(new Array(anecdotes.length).fill(0));
 
   const selectRandomAnecdote = props => {
     // random quote from elements 0 - 5
     setSelected(Math.floor(Math.random() * 5));
   };
 
+  const voteForAnecdote = props => {
+    const newVotes = [...votes];
+    newVotes[props] += 1;
+    setVotes(newVotes);
+  };
+
   return (
     <div>
       {props.anecdotes[selected]}
       <br />
+      <Button onClick={() => voteForAnecdote(selected)} text="vote" />
       <Button onClick={() => selectRandomAnecdote()} text="next anecdote" />
     </div>
   );
