@@ -1,8 +1,8 @@
 # fullstackcourse 🔥
 
-These repositories are my submissions for Helsinki University's **Full Stack Open course**.
+Here are my submissions for Helsinki University's **Full Stack Open course**.
 
-Description: *Deep Dive Into Modern Web Development*
+Course Description: *Deep Dive Into Modern Web Development*
 
 Link: https://fullstackopen.com
 
@@ -22,7 +22,7 @@ This repository covers parts 1-8 of the course. Each exercise has its own README
 
 
 ---
-## Breakdown of Parts
+## Breakdown of Parts & Progress
 ### Part 1
 Covered the following concepts:
 
