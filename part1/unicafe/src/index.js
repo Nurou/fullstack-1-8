@@ -9,27 +9,43 @@ const Button = props => {
   return <button onClick={props.onClick}>{props.text}</button>;
 };
 
-const Stats = props => {
-  let feedback = props.feedback;
+// shows a single statistic
+const Statistic = props => {
   return (
-    <p>
-      Good: {feedback.good}
+    <div>
+      {props.text}: {props.value}
       <br />
-      Neutral: {feedback.neutral}
-      <br />
-      Bad: {feedback.bad}
-      <br />
-      All: {feedback.total}
-      <br />
+    </div>
+  );
+};
+
+// combines the statistics
+const Statistics = props => {
+  // extracting the feedback object from props
+  let feedback = props.feedback;
+
+  // has feedback been given?
+  if (!feedback.total) {
+    return <p>No feedback given.</p>;
+  }
+
+  // if yes, display them
+  return (
+    <div>
+      <Statistic text="Good" value={feedback.good} />
+      <Statistic text="Neutral" value={feedback.neutral} />
+      <Statistic text="Bad" value={feedback.bad} />
       {/* feedback.average() || 0 will convert any "falsey" to 0 */}
       Average: {feedback.average() || 0}
       <br />
-      Positive: {feedback.positive() || 0} %
-    </p>
+      Positive: {Math.round(feedback.positive()) || 0} %
+    </div>
   );
 };
+
+// root component
 const App = () => {
-  // save clicks of each button to own state
+  // save the clicks of each button to own state
   const [good, setGood] = useState(0);
   const [neutral, setNeutral] = useState(0);
   const [bad, setBad] = useState(0);
@@ -47,6 +63,7 @@ const App = () => {
     setBad(value);
   };
 
+  // feedback data
   const feedbackStats = {
     good: good,
     neutral: neutral,
@@ -71,8 +88,8 @@ const App = () => {
       <Button onClick={() => incrementNeutral(neutral + 1)} text="Neutral" />
       <Button onClick={() => incrementBad(bad + 1)} text="Bad" />
       <Header text="Statistics: " />
-      {/* <Stats good={good} neutral={neutral} bad={bad} all={all} /> */}
-      <Stats feedback={feedbackStats} />
+      {/* <Statistics good={good} neutral={neutral} bad={bad} all={all} /> */}
+      <Statistics feedback={feedbackStats} />
     </div>
   );
 };
