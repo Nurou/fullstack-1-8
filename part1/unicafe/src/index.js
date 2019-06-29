@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
 
+// TODO: Display the statistics in an HTML table
+
 const Header = props => {
   return <h1>{props.text}</h1>;
 };
@@ -12,10 +14,10 @@ const Button = props => {
 // shows a single statistic
 const Statistic = props => {
   return (
-    <div>
-      {props.text}: {props.value}
-      <br />
-    </div>
+    <tr>
+      <td>{props.text}</td>
+      <td>{props.value}</td>
+    </tr>
   );
 };
 
@@ -29,17 +31,21 @@ const Statistics = props => {
     return <p>No feedback given.</p>;
   }
 
-  // if yes, display them
+  // if yes, display them in tabular form
   return (
-    <div>
-      <Statistic text="Good" value={feedback.good} />
-      <Statistic text="Neutral" value={feedback.neutral} />
-      <Statistic text="Bad" value={feedback.bad} />
-      {/* feedback.average() || 0 will convert any "falsey" to 0 */}
-      Average: {feedback.average() || 0}
-      <br />
-      Positive: {Math.round(feedback.positive()) || 0} %
-    </div>
+    <table>
+      <tbody>
+        <Statistic text="Good" value={feedback.good} />
+        <Statistic text="Neutral" value={feedback.neutral} />
+        <Statistic text="Bad" value={feedback.bad} />
+        <Statistic text="All" value={feedback.total} />
+        <Statistic text="Average" value={feedback.average()} />
+        <Statistic
+          text="Positive"
+          value={(Math.round(feedback.positive()) || 0) + ' %'}
+        />
+      </tbody>
+    </table>
   );
 };
 
