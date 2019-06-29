@@ -34,11 +34,6 @@ const Part = props => {
 // Comprises of 3 parts, one for each course
 
 const Content = props => {
-  // const parts = [];
-  // // gets parts array of objects as props
-  // Object.keys(props).forEach(function(prop) {
-  //   parts.push(...props[prop]);
-  // });
   const firstPart = props.parts[0];
   const secondPart = props.parts[1];
   const thirdPart = props.parts[2];
@@ -97,5 +92,4 @@ const App = () => {
     </div>
   );
 };
-
 ReactDOM.render(<App />, document.getElementById('root'));
