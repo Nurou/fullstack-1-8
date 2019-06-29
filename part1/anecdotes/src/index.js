@@ -9,29 +9,12 @@ const Header = props => {
   return <h1>{props.text}</h1>;
 };
 
-const DisplayMostVoted = props => {
-  // extract votes array passed in as props
-  const votes = props.votes;
-  // retrieve index of the array element having the most votes
-  const indexOfMostVoted = votes.indexOf(Math.max(...votes));
-  const mostVotedAnecdote = anecdotes[indexOfMostVoted];
-  const voteCount = votes[indexOfMostVoted];
-
+const Anecdote = ({ content, votes }) => {
   return (
     <div>
-      {mostVotedAnecdote}
+      {content}
       <br />
-      has {voteCount} votes
-    </div>
-  );
-};
-
-const DisplayCurrent = props => {
-  return (
-    <div>
-      {props.anecdote}
-      <br />
-      has {props.votes} votes
+      has {votes} votes
     </div>
   );
 };
@@ -45,38 +28,35 @@ const anecdotes = [
   'Debugging is twice as hard as writing the code in the first place. Therefore, if you write the code as cleverly as possible, you are, by definition, not smart enough to debug it.'
 ];
 
-const App = props => {
-  const anecdotes = props.anecdotes;
-
-  // quote selection is based on selected array index
+const App = ({ anecdotes }) => {
+  // selected - index of selected anectode in array
   const [selected, setSelected] = useState(0);
-  const [votes, setVotes] = useState(new Array(props.anecdotes.length).fill(0));
+  const [votes, setVotes] = useState(new Array(anecdotes.length).fill(0));
+  const [mostPopular, setMostPopular] = useState(0);
+  // random quote based on anecdotes length
+  const next = () => Math.floor(Math.random() * anecdotes.length);
 
-  const selectRandomAnecdote = props => {
-    // random quote from elements 0 - 5
-    setSelected(Math.floor(Math.random() * 5));
-  };
-
-  // forbidden in React to mutate state directly ()
-  // hence the use of a copy
-  const voteForAnecdote = props => {
+  const handleVote = () => {
+    // forbidden in React to mutate state directly
+    // hence the use of a copy
     const updatedVotes = [...votes];
-    updatedVotes[props] += 1;
+    updatedVotes[selected] += 1;
     setVotes(updatedVotes);
-  };
 
-  // consts to be used for display of anecdote data
-  const anecdoteText = anecdotes[selected];
-  const anecdoteVoteCount = votes[selected];
+    //has the voted anectode become most popular?
+    if (updatedVotes[mostPopular] < updatedVotes[selected]) {
+      setMostPopular(selected);
+    }
+  };
 
   return (
     <div>
       <Header text="Anecdote of the day" />
-      <DisplayCurrent anecdote={anecdoteText} votes={anecdoteVoteCount} />
-      <Button onClick={() => voteForAnecdote(selected)} text="vote" />
-      <Button onClick={() => selectRandomAnecdote()} text="next anecdote" />
+      <Anecdote content={anecdotes[selected]} votes={votes[selected]} />
+      <Button onClick={handleVote} text="vote" />
+      <Button onClick={() => setSelected(next())} text="next anecdote" />
       <Header text="Anecdote with most votes" />
-      <DisplayMostVoted votes={votes} />
+      <Anecdote content={anecdotes[mostPopular]} votes={votes[mostPopular]} />
     </div>
   );
 };

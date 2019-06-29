@@ -24,15 +24,15 @@ const Statistic = ({ text, value }) => {
 const Statistics = ({ good, neutral, bad }) => {
   const total = good + neutral + bad;
 
-  // has feedback been given?
-  if (!total) {
-    return <p>No feedback given.</p>;
-  }
-
   // percentage of feedback that was positive
   const positivePercentage = () => Math.round((good / total) * 100) + ' %' || 0;
   // the average score (good: 1, neutral: 0, bad: -1)
   const averageFigure = () => (good - (bad * 1) / total).toPrecision(2);
+
+  // has feedback been given?
+  if (!total) {
+    return <p>No feedback given.</p>;
+  }
 
   // if yes, display them in tabular form
   return (
