@@ -1,6 +1,7 @@
 # fullstackcourse 🔥
 
-Here are my submissions for Helsinki University's **Full Stack Open course**.
+<img src="./assets/fslogo.svg" width="250" height="300" align="right"/>
+Here are my submissions for Helsinki University's **Full Stack Open** course.
 
 Course Description: *Deep Dive Into Modern Web Development*
 
