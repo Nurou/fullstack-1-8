@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
 
-const Button = props => {
-  return <button onClick={props.onClick}>{props.text}</button>;
+const Button = ({ onClick, text }) => {
+  return <button onClick={onClick}>{text}</button>;
 };
 
-const Header = props => {
-  return <h1>{props.text}</h1>;
+const Header = ({ text }) => {
+  return <h1>{text}</h1>;
 };
 
 const Anecdote = ({ content, votes }) => {

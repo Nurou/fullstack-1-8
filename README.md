@@ -24,7 +24,7 @@ This repository covers parts 1-8 of the course. Each exercise has its own README
 ---
 ## Breakdown of Parts & Progress
 ### Part 1
-Covered the following concepts:
+Covered the following topics:
 
 a) Introduction to React
 
