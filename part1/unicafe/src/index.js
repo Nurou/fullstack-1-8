@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
-
-// TODO: Display the statistics in an HTML table
+import './index.css';
 
 const Header = props => {
   return <h1>{props.text}</h1>;
@@ -33,13 +32,13 @@ const Statistics = props => {
 
   // if yes, display them in tabular form
   return (
-    <table>
+    <table className="darkTable">
       <tbody>
         <Statistic text="Good" value={feedback.good} />
         <Statistic text="Neutral" value={feedback.neutral} />
         <Statistic text="Bad" value={feedback.bad} />
         <Statistic text="All" value={feedback.total} />
-        <Statistic text="Average" value={feedback.average()} />
+        <Statistic text="Average" value={feedback.average().toPrecision(2)} />
         <Statistic
           text="Positive"
           value={(Math.round(feedback.positive()) || 0) + ' %'}
@@ -94,7 +93,6 @@ const App = () => {
       <Button onClick={() => incrementNeutral(neutral + 1)} text="Neutral" />
       <Button onClick={() => incrementBad(bad + 1)} text="Bad" />
       <Header text="Statistics: " />
-      {/* <Statistics good={good} neutral={neutral} bad={bad} all={all} /> */}
       <Statistics feedback={feedbackStats} />
     </div>
   );
