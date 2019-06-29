@@ -1,9 +1,6 @@
 import React from 'react'; // library: component base
 import ReactDOM from 'react-dom'; // glue connectiing React to DOM API
 
-/* React components function like JS functions
-They take in 'props' and return React elements */
-
 // Header component - page title
 
 const Header = props => {
