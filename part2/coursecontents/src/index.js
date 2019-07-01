@@ -14,25 +14,34 @@ const Part = ({ part }) => (
 );
 
 // Content component - course info
-// Comprises of 3 parts, one for each course
+// Comprises of parts, one for each course
 
-const Content = props => {
-  return (
-    <div>
-      <Part part={props.parts[0]} />
-      <Part part={props.parts[1]} />
-      <Part part={props.parts[2]} />
-    </div>
-  );
+const Content = ({ parts }) => {
+  const partElements = parts.map((part, index) => (
+    <Part key={part.id} part={parts[index]} />
+  ));
+
+  return <div>{partElements}</div>;
 };
 
 // Total component - total number of exercises
 
-const Total = ({ parts }) => {
-  const totalCourseCount =
-    parts[0].exercises + parts[1].exercises + parts[2].exercises;
+// const Total = ({ parts }) => {
+//   const totalCourseCount =
+//     parts[0].exercises + parts[1].exercises + parts[2].exercises;
 
-  return <div>Number of exercises {totalCourseCount}</div>;
+//   return <div>Number of exercises {totalCourseCount}</div>;
+// };
+
+// a component responsible for formatting a single course called Course
+
+const Course = ({ course }) => {
+  return (
+    <div>
+      <Header course={course.name} />
+      <Content parts={course.parts} />
+    </div>
+  );
 };
 
 // root component - top of component tree
@@ -43,24 +52,25 @@ const App = () => {
     parts: [
       {
         name: 'Fundamentals of React',
-        exercises: 10
+        exercises: 10,
+        id: 1
       },
       {
         name: 'Using props to pass data',
-        exercises: 7
+        exercises: 7,
+        id: 2
       },
       {
         name: 'State of a component',
-        exercises: 14
+        exercises: 14,
+        id: 3
       }
     ]
   };
 
   return (
     <div>
-      <Header course={course.name} />
-      <Content parts={course.parts} />
-      <Total parts={course.parts} />
+      <Course course={course} />
     </div>
   );
 };

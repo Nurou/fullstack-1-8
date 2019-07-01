@@ -1,6 +1,7 @@
 # fullstackcourse 🔥
 
 <img src="./assets/fslogo.svg" width="250" height="300" align="right"/>
+
 Here are my submissions for Helsinki University's **Full Stack Open** course.
 
 Course Description: *Deep Dive Into Modern Web Development*
@@ -39,3 +40,22 @@ d) A more complex state, debugging React apps
 - [x] courseinfo
 - [x] unicafe
 - [x] anecdotes
+
+---
+### Part 2
+Covered the following topics:
+
+a) Rendering a collection, modules
+
+b) Forms
+
+c) Getting data from server
+
+d) Altering data in server
+
+e) Adding styles to React app
+
+### Exercises
+- [ ] 
+- [ ] 
+- [ ] 
