@@ -26,12 +26,17 @@ const Content = ({ parts }) => {
 
 // Total component - total number of exercises
 
-// const Total = ({ parts }) => {
-//   const totalCourseCount =
-//     parts[0].exercises + parts[1].exercises + parts[2].exercises;
+const Total = ({ parts }) => {
+  const totalCourseCount = parts.reduce((total, part) => {
+    return total + part.exercises;
+  }, 0);
 
-//   return <div>Number of exercises {totalCourseCount}</div>;
-// };
+  return (
+    <div>
+      <b>total of {totalCourseCount} exercises</b>
+    </div>
+  );
+};
 
 // a component responsible for formatting a single course called Course
 
@@ -40,6 +45,7 @@ const Course = ({ course }) => {
     <div>
       <Header course={course.name} />
       <Content parts={course.parts} />
+      <Total parts={course.parts} />
     </div>
   );
 };
