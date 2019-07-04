@@ -12,6 +12,7 @@ const App = () => {
   // newName meant for controlling the form input element.
   const [persons, setPersons] = useState([{ name: 'Arto Hellas' }]);
   const [newName, setNewName] = useState('');
+  const [newNumber, setNewNumber] = useState('');
 
   // function to display the list of contacts
   const rows = () =>
@@ -29,8 +30,10 @@ const App = () => {
     let isAdreadyAdded = false;
 
     persons.forEach(person => {
+      // case insensitive comparison
       const existingName = person.name.toUpperCase();
       const personToAdd = newName.toUpperCase();
+
       if (existingName.includes(personToAdd)) {
         alert(`${newName} has already been added to the phonebook`);
         isAdreadyAdded = true;
@@ -45,7 +48,8 @@ const App = () => {
     // create new person object
     const person = {
       id: persons.length + 1,
-      name: newName
+      name: newName,
+      number: newNumber
     };
     // concat() create a new array in which content of old array
     // and the new item are both included
@@ -53,8 +57,12 @@ const App = () => {
   };
 
   // controlling input through state
-  const handlePBchange = e => {
+  const handleNameChange = e => {
     setNewName(e.target.value);
+  };
+
+  const handleNumberChange = e => {
+    setNewNumber(e.target.value);
   };
 
   return (
@@ -62,10 +70,16 @@ const App = () => {
       <h2>Phonebook</h2>
       <form onSubmit={addContact}>
         <div>
-          name:{' '}
+          name:
           <input
             value={newName} //
-            onChange={handlePBchange}
+            onChange={handleNameChange}
+          />
+          <br />
+          number:
+          <input
+            value={newNumber} //
+            onChange={handleNumberChange}
           />
         </div>
         <div>
