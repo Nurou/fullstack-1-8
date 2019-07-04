@@ -13,6 +13,7 @@ const App = () => {
   const [persons, setPersons] = useState([{ name: 'Arto Hellas' }]);
   const [newName, setNewName] = useState('');
 
+  // function to display the list of contacts
   const rows = () =>
     persons.map(person => (
       <Person
@@ -24,6 +25,23 @@ const App = () => {
   const addContact = e => {
     // prevent refresh on submit
     e.preventDefault();
+
+    let isAdreadyAdded = false;
+
+    persons.forEach(person => {
+      const existingName = person.name.toUpperCase();
+      const personToAdd = newName.toUpperCase();
+      if (existingName.includes(personToAdd)) {
+        alert(`${newName} has already been added to the phonebook`);
+        isAdreadyAdded = true;
+      }
+    });
+
+    // new persons can't be added
+    if (isAdreadyAdded) {
+      return;
+    }
+
     // create new person object
     const person = {
       id: persons.length + 1,
@@ -34,6 +52,7 @@ const App = () => {
     setPersons(persons.concat(person));
   };
 
+  // controlling input through state
   const handlePBchange = e => {
     setNewName(e.target.value);
   };
