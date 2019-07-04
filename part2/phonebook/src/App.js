@@ -1,22 +1,44 @@
 import React, { useState } from 'react';
 import Person from './components/person';
 
-/* NB:
-
-you can use the person's name as value of the key property
-remember to prevent the default action of submitting HTML forms!
-
-*/
-
 const App = () => {
-  // newName meant for controlling the form input element.
-  const [persons, setPersons] = useState([{ name: 'Arto Hellas' }]);
+  // application state pieces
+  const [persons, setPersons] = useState([
+    {
+      id: 1,
+      name: 'Arto Hellas',
+      number: '040-123456'
+    },
+    {
+      id: 2,
+      name: 'Ada Lovelace',
+      number: '39-44-5323523'
+    },
+    {
+      id: 3,
+      name: 'Dan Abramov',
+      number: '12-43-234345'
+    },
+    {
+      id: 4,
+      name: 'Mary Poppendieck',
+      number: '39-23-6423122'
+    }
+  ]);
+
   const [newName, setNewName] = useState('');
   const [newNumber, setNewNumber] = useState('');
+  const [searchInput, setSearchInput] = useState('');
 
-  // function to display the list of contacts
+  // filtering persons based on user search input
+  const personsToList = persons.filter(person => {
+    const regex = new RegExp(searchInput, 'gi');
+    return person.name.match(regex);
+  });
+
+  // persons list objects converted to HTML list elements
   const rows = () =>
-    persons.map(person => (
+    personsToList.map(person => (
       <Person
         key={person.id} //
         person={person}
@@ -65,9 +87,19 @@ const App = () => {
     setNewNumber(e.target.value);
   };
 
+  const handleSearchChange = e => {
+    setSearchInput(e.target.value);
+  };
+
   return (
     <div>
       <h2>Phonebook</h2>
+      filter shown with
+      <input
+        value={searchInput} //
+        onChange={handleSearchChange}
+      />
+      <h2>Add New</h2>
       <form onSubmit={addContact}>
         <div>
           name:
