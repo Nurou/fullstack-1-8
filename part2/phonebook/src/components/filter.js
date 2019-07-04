@@ -3,7 +3,7 @@ import React from 'react';
 const Filter = ({ input, newSearch }) => {
   return (
     <div>
-      filter displayed numbers with{' '}
+      filter displayed by{' '}
       <input
         value={input} //
         onChange={newSearch}

@@ -107,8 +107,7 @@ const App = () => {
         numberChange={handleNumberChange}
       />
       <h2>Numbers</h2>
-      <Persons rows={rows()} />
-      <ul>{rows()}</ul>
+      <Persons rows={rows} />
     </div>
   );
 };

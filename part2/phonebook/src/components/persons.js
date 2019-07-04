@@ -1,10 +1,9 @@
 import React from 'react';
 
-const Persons = props => {
-  console.log(props);
+const Persons = ({ rows }) => {
   return (
     <div>
-      <ul>rows</ul>
+      <ul>{rows()}</ul>
     </div>
   );
 };
