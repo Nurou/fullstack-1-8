@@ -1,5 +1,6 @@
 import React from 'react';
 
+// renders the list of languages
 const Languages = ({ rows }) => {
   return (
     <div>
@@ -8,17 +9,22 @@ const Languages = ({ rows }) => {
   );
 };
 
+// returns an individual language
 const Language = ({ language }) => {
   return <li>{language.name}</li>;
 };
 
+// the actual component - displays country info
 const BasicData = ({ country }) => {
+  // add key's to each language
   country.languages.map((language, index) => (language.id = index));
 
-  const languages = () =>
+  // map each langiage to a HTML list element
+  const rows = () =>
     country.languages.map(language => (
       <Language key={language.id} language={language} />
     ));
+
   return (
     <div>
       <h1>{country.name}</h1>
@@ -26,7 +32,7 @@ const BasicData = ({ country }) => {
       <br />
       population {country.population}
       <h2>languages</h2>
-      <Languages rows={languages} />
+      <Languages rows={rows} />
       <img
         src={country.flag}
         alt="country flag"
