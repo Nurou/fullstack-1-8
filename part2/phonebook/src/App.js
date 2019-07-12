@@ -3,13 +3,7 @@ import Person from './components/person';
 import Filter from './components/filter';
 import PersonForm from './components/personForm';
 import Persons from './components/persons';
-import axios from 'axios';
 import personsService from './services/persons';
-
-// TODO: set up json server
-// TODO: set up services (optional)
-// TODO:
-// TODO:
 
 const App = () => {
   // application state pieces
@@ -18,15 +12,10 @@ const App = () => {
   const [newNumber, setNewNumber] = useState('');
   const [searchInput, setSearchInput] = useState('');
 
-  const hook = () => {
-    axios
-      .get('http://localhost:3001/persons') //
-      .then(response => {
-        setPersons(response.data);
-      });
-  };
-
-  useEffect(hook, []);
+  // initial phonebook retrieval
+  useEffect(() => {
+    personsService.getAll().then(initialNotes => setPersons(initialNotes));
+  }, []);
 
   // filtering persons based on user search input
   const personsToList = persons.filter(person => {
@@ -40,48 +29,75 @@ const App = () => {
       <Person
         key={person.id} //
         person={person}
+        deleteEntry={deleteEntry}
       />
     ));
+
+  /**
+    |--------------------------------------------------
+    | - adding a contact
+    | - if contact already exists perform number update
+    |--------------------------------------------------
+    */
 
   const addContact = e => {
     // prevent refresh on submit
     e.preventDefault();
 
+    // flags
     let isAdreadyAdded = false;
+    let confirmed = true;
+    let existingPerson = '';
 
     persons.forEach(person => {
       // case insensitive comparison
       const existingName = person.name.toUpperCase();
       const personToAdd = newName.toUpperCase();
 
-      if (existingName.includes(personToAdd)) {
-        alert(`${newName} has already been added to the phonebook`);
+      // person already on the books?
+      if (existingName === personToAdd) {
+        existingPerson = person;
         isAdreadyAdded = true;
       }
     });
 
-    // new persons can't be added
     if (isAdreadyAdded) {
-      return;
+      // want to update number?
+      confirmed = window.confirm(`${newName} has already been added to the phonebook,
+         replace the old number with a new one?`);
+      if (confirmed) {
+        const updatedPerson = {
+          ...existingPerson,
+          number: newNumber
+        };
+        personsService
+          .update(existingPerson.id, updatedPerson) //
+          .then(returnedPerson => {
+            setPersons(
+              persons.map(person =>
+                person.id === existingPerson.id ? updatedPerson : person
+              )
+            );
+          });
+      }
     }
 
     // create new person object
-    const person = {
+    const newPerson = {
       id: persons.length + 1,
       name: newName,
       number: newNumber
     };
 
-    // concat() create a new array in which content of old array
-    // and the new item are both included
-
-    // store note in db & render returned note
-    personsService.create(person).then(returnedPerson => {
-      setPersons(persons.concat(person));
-      // clear inputs
-      setNewNumber('');
-      setNewName('');
-    });
+    // create note in db & render returned note
+    personsService
+      .create(newPerson) //
+      .then(returnedPerson => {
+        setPersons(persons.concat(returnedPerson));
+        // clear inputs
+        setNewNumber('');
+        setNewName('');
+      });
   };
 
   // controlling input through state
@@ -95,6 +111,16 @@ const App = () => {
 
   const handleSearchChange = e => {
     setSearchInput(e.target.value);
+  };
+
+  // deleting a person
+  const deleteEntry = id => {
+    const personToDelete = persons.find(person => person.id === id);
+    const confirmDelete = window.confirm(`Delete ${personToDelete.name}?`);
+    if (confirmDelete) {
+      personsService.remove(id);
+      setPersons(persons.filter(person => person.id !== id));
+    }
   };
 
   return (
