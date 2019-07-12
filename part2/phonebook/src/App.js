@@ -4,6 +4,12 @@ import Filter from './components/filter';
 import PersonForm from './components/personForm';
 import Persons from './components/persons';
 import axios from 'axios';
+import personsService from './services/persons';
+
+// TODO: set up json server
+// TODO: set up services (optional)
+// TODO:
+// TODO:
 
 const App = () => {
   // application state pieces
@@ -65,9 +71,17 @@ const App = () => {
       name: newName,
       number: newNumber
     };
+
     // concat() create a new array in which content of old array
     // and the new item are both included
-    setPersons(persons.concat(person));
+
+    // store note in db & render returned note
+    personsService.create(person).then(returnedPerson => {
+      setPersons(persons.concat(person));
+      // clear inputs
+      setNewNumber('');
+      setNewName('');
+    });
   };
 
   // controlling input through state
