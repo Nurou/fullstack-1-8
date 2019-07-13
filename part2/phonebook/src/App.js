@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
+import './index.css';
 import Person from './components/person';
 import Filter from './components/filter';
 import PersonForm from './components/personForm';
 import Persons from './components/persons';
 import personsService from './services/persons';
+import Notification from './components/notification';
 
 const App = () => {
   // application state pieces
@@ -11,6 +13,8 @@ const App = () => {
   const [newName, setNewName] = useState('');
   const [newNumber, setNewNumber] = useState('');
   const [searchInput, setSearchInput] = useState('');
+  const [message, setMessage] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
 
   // initial phonebook retrieval
   useEffect(() => {
@@ -32,13 +36,6 @@ const App = () => {
         deleteEntry={deleteEntry}
       />
     ));
-
-  /**
-    |--------------------------------------------------
-    | - adding a contact
-    | - if contact already exists perform number update
-    |--------------------------------------------------
-    */
 
   const addContact = e => {
     // prevent refresh on submit
@@ -75,7 +72,7 @@ const App = () => {
           .then(returnedPerson => {
             setPersons(
               persons.map(person =>
-                person.id === existingPerson.id ? updatedPerson : person
+                person.id === existingPerson.id ? returnedPerson : person
               )
             );
           });
@@ -97,6 +94,11 @@ const App = () => {
         // clear inputs
         setNewNumber('');
         setNewName('');
+        setMessage(`Added ${returnedPerson.name} `);
+        // message disappears after timeout
+        setTimeout(() => {
+          setMessage(null);
+        }, 2000);
       });
   };
 
@@ -118,7 +120,16 @@ const App = () => {
     const personToDelete = persons.find(person => person.id === id);
     const confirmDelete = window.confirm(`Delete ${personToDelete.name}?`);
     if (confirmDelete) {
-      personsService.remove(id);
+      personsService
+        .remove(id) //
+        .catch(error => {
+          setErrorMessage(
+            `Information of ${
+              personToDelete.name
+            } has already been removed from the server`
+          );
+          setPersons(persons.filter(person => person.id !== id)); // filter deleted person from state
+        });
       setPersons(persons.filter(person => person.id !== id));
     }
   };
@@ -126,6 +137,14 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+
+      {message ? <Notification message={message} messageType="message" /> : ''}
+      {errorMessage ? (
+        <Notification message={errorMessage} messageType="error" />
+      ) : (
+        ''
+      )}
+
       <Filter input={searchInput} newSearch={handleSearchChange} />
       <h2>Add New</h2>
       <PersonForm
