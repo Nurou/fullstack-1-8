@@ -57,4 +57,5 @@ e) Adding styles to React app
 
 ### Exercises
 - [x] Course Content 
-- [x] Phone book
+- [x] Data For Countries 
+- [x] Phonebook
