@@ -16,4 +16,4 @@
 ---
 ## Demo of Finished Exercise
 ![](../../assets/phonebook.gif)
-![](../../assets/phonebook.gif)
+![](../../assets/phonebookadd.gif)
