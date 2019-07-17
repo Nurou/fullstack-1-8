@@ -20,7 +20,7 @@ Main technologies covered:
 ---
 ## About Exercise submissions
 
-This repository covers parts 1-8 of the course. Each exercise has its own README with an image/gif demostrating the final result.
+This repository covers parts 1 & 2 of the course. Each exercise has its own README with an image/gif demo the final result.
 
 
 ---
