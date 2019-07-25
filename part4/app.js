@@ -18,6 +18,7 @@ mongoose
     console.log('error connecting to MongoDB:', error.message)
   })
 
+app.use(cors())
 app.use(bodyParser.json())
 
 app.use('/api/blogs', blogsRouter)
