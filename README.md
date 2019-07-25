@@ -2,7 +2,7 @@
 
 <img src="./assets/fslogo.svg" width="250" height="300" align="right"/>
 
-Here are my submissions for Helsinki University's **Full Stack Open** course.
+My submissions for Helsinki University's **Full Stack Open** course.
 
 Course Description: *Deep Dive Into Modern Web Development*
 
@@ -20,13 +20,13 @@ Main technologies covered:
 ---
 ## About Exercise submissions
 
-This repository covers parts 1 & 2 of the course. Each exercise has its own README with an image/gif demo the final result.
+This repository covers all parts of the course, except parts 0 and 3. Each exercise has its own README with a demo the final result.
 
 
 ---
-## Breakdown of Parts & Progress
+## Parts & Progress:
 ### Part 1
-Covered the following topics:
+Covers the following topics:
 
 a) Introduction to React
 
@@ -43,7 +43,7 @@ d) A more complex state, debugging React apps
 
 ---
 ### Part 2
-Covered the following topics:
+Covers the following topics:
 
 a) Rendering a collection, modules
 
@@ -59,3 +59,17 @@ e) Adding styles to React app
 - [x] Course Content 
 - [x] Data For Countries 
 - [x] Phonebook
+---
+### Part 4
+Covers the following topics:
+
+a) Structure of backend application, introduction to testing
+
+b) Testing the backend
+
+c) User administration
+
+d) Token authentication
+
+### Exercises
+- [x] Blog List 
