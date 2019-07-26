@@ -93,7 +93,7 @@ describe('total likes', () => {
 })
 
 describe('favourite blog', () => {
-  test('of empty list is an empty object', () => {
+  test('of empty blog list is an empty object', () => {
     const result = listHelper.favouriteBlog(listWithNoBlogs)
     expect(result).toEqual({})
   })
@@ -109,6 +109,26 @@ describe('favourite blog', () => {
       title: listWithManyBlogs[2].title,
       author: listWithManyBlogs[2].author,
       likes: listWithManyBlogs[2].likes,
+    })
+  })
+})
+
+describe('author with most posts', () => {
+  test('of empty list is an empty string', () => {
+    const result = listHelper.mostBlogs(listWithNoBlogs)
+    expect(result).toEqual('')
+  })
+
+  test(`when list has only one blog is that blog's author`, () => {
+    const result = listHelper.mostBlogs(listWithOneBlog)
+    expect(result).toEqual(listWithOneBlog[0].author)
+  })
+
+  test('from a longer list is selected correctly', () => {
+    const result = listHelper.mostBlogs(listWithManyBlogs)
+    expect(result).toEqual({
+      author: 'Robert C. Martin',
+      blogs: 3,
     })
   })
 })
