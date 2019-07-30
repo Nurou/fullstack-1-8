@@ -10,15 +10,12 @@ beforeEach(async () => {
   // clear
   await Blog.deleteMany({})
   // save initial blogs
-  // for...of block guarantees a specific execution order.
-  for (let blog of helper.initialBlogList) {
-    let blogObject = new Blog(blog)
-    await blogObject.save()
-  }
+  const blogObjects = helper.initialBlogList.map(blog => new Blog(blog))
+  const promiseArray = blogObjects.map(blog => blog.save())
+  await Promise.all(promiseArray)
 })
 
 test('blogs are returned as json', async () => {
-  console.log('entered test')
   await testApi
     .get('/api/blogs')
     .expect(200)
@@ -56,6 +53,67 @@ test('a valid blog post can be added', async () => {
 
   const finalBlogList = await helper.blogsInDb()
   expect(finalBlogList.length).toBe(helper.initialBlogList.length + 1)
+})
+
+test('default to 0 if likes property missing', async () => {
+  const newPost = {
+    title: 'testing adding a post',
+    author: 'Joel Hassan',
+    url: 'https://joelhassan.com/',
+  }
+
+  const savedBlog = await testApi
+    .post('/api/blogs')
+    .send(newPost)
+    .expect(201)
+    .expect('Content-Type', /application\/json/)
+
+  expect(savedBlog.body.likes).toBeDefined()
+})
+
+test('respond with 400 bad if title and url missing', async () => {
+  const newPost = {
+    // title: 'testing adding a post',
+    author: 'Joel Hassan',
+    // url: 'https://joelhassan.com/',
+    likes: 1000,
+  }
+
+  const savedBlog = await testApi
+    .post('/api/blogs')
+    .send(newPost)
+    .expect(400)
+})
+
+test('deletion successful', async () => {
+  const postsAtStart = await helper.blogsInDb()
+  const blogToDelete = postsAtStart[0]
+  console.log(blogToDelete)
+
+  await testApi.delete(`/api/blogs/${blogToDelete.id}`).expect(204)
+
+  const finalBlogList = await helper.blogsInDb()
+
+  expect(finalBlogList.length).toBe(helper.initialBlogList.length - 1)
+})
+
+test('likes are updated successfully', async () => {
+  // initial blog list
+  const postsAtStart = await helper.blogsInDb()
+  const postToUpdate = postsAtStart[0]
+
+  const updatedPost = {
+    ...postToUpdate,
+    likes: postToUpdate.likes + 1,
+  }
+  const returnedPost = await testApi
+    .put(`/api/blogs/${updatedPost.id}`)
+    .send(updatedPost)
+    .expect(200)
+
+  const returnedPostsLikes = returnedPost.body.likes
+
+  expect(returnedPostsLikes).toBe(postToUpdate.likes + 1)
 })
 
 afterAll(() => {
