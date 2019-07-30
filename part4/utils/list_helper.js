@@ -4,6 +4,7 @@ const dummy = blogs => {
   return 1
 }
 
+// total likes of all blogs
 function totalLikes(blogs) {
   if (!blogs.length) return 0
 
@@ -14,6 +15,7 @@ function totalLikes(blogs) {
   return blogs.reduce(reducer, 0)
 }
 
+// favourite blog based on likes
 function favouriteBlog(blogs) {
   if (!blogs.length) return {}
   if (blogs.length === 1) return blogs[0]
@@ -31,6 +33,7 @@ function favouriteBlog(blogs) {
   }
 }
 
+// author who's written the most blogs
 function mostBlogs(blogs) {
   // no blogs? no author
   if (!blogs.length) return ''
@@ -55,6 +58,7 @@ function mostBlogs(blogs) {
   }
 }
 
+// author with most total likes
 function mostLikes(blogs) {
   // no blogs? no author
   if (!blogs.length) return ''
@@ -91,6 +95,7 @@ function mostLikes(blogs) {
 
   return mostLiked
 }
+
 module.exports = {
   dummy,
   totalLikes,
