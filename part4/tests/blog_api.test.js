@@ -5,11 +5,10 @@ const testApi = supertest(app)
 const Blog = require('../models/blog')
 const helper = require('./test_helper')
 
-// clear db prior to test run
+// reset db before each test run
 beforeEach(async () => {
-  // delete all blogs
+  // clear
   await Blog.deleteMany({})
-
   // save initial blogs
   // for...of block guarantees a specific execution order.
   for (let blog of helper.initialBlogList) {
@@ -27,10 +26,16 @@ test('blogs are returned as json', async () => {
 })
 
 test('all blogs are returned', async () => {
-  await testApi
-    .get('/api/blogs')
-    .expect(200)
-    .expect('Content-Type', /application\/json/)
+  const response = await testApi.get('/api/blogs')
+
+  expect(response.body.length).toBe(helper.initialBlogList.length)
+})
+
+test('unique identifier is named id', async () => {
+  const result = await testApi.get('/api/blogs/')
+  result.body.forEach(blog => {
+    expect(blog.id).toBeDefined()
+  })
 })
 
 afterAll(() => {

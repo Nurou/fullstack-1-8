@@ -15,7 +15,9 @@ const blogSchema = mongoose.Schema({
 // format returned object
 blogSchema.set('toJSON', {
   transform: (document, returnedObject) => {
+    // prettier id
     returnedObject.id = returnedObject._id.toString()
+    // get rid of ugly id & version
     delete returnedObject._id
     delete returnedObject.__v
   },
