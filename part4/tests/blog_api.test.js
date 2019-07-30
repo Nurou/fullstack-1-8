@@ -38,6 +38,26 @@ test('unique identifier is named id', async () => {
   })
 })
 
+test('a valid blog post can be added', async () => {
+  // test blog post
+  const newPost = {
+    title: 'testing adding a post',
+    author: 'Joel Hassan',
+    url: 'https://joelhassan.com/',
+    likes: 10000,
+  }
+
+  // post the blog
+  await testApi
+    .post('/api/blogs')
+    .send(newPost)
+    .expect(201)
+    .expect('Content-Type', /application\/json/)
+
+  const finalBlogList = await helper.blogsInDb()
+  expect(finalBlogList.length).toBe(helper.initialBlogList.length + 1)
+})
+
 afterAll(() => {
   mongoose.connection.close()
 })

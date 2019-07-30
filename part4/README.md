@@ -10,8 +10,8 @@
 - [x] 4.7 - helper functions and unit tests, step5
 - [x] 4.8 - use supertest to test HTTP GET
 - [x] 4.9 -  verify that the unique identifier property of the blog posts is named id
-- [x] 4.10 - test HTTP POST for creating a new blog post
-- [x] 4.11 - test to verify that if request property is missing, default to 0
+- [x] 4.10 - test HTTP POST for new posts & refactor ops to async/await
+- [x] 4.11 - test to see if request property is missing, default to 0
 - [x] 4.12 - test to verify that 400 bad request returned if req data missing
 
 ---
