@@ -3,16 +3,20 @@ const supertest = require('supertest')
 const app = require('../app')
 const testApi = supertest(app)
 const Blog = require('../models/blog')
+const User = require('../models/user')
 const helper = require('./test_helper')
 
 // reset db before each test run
 beforeEach(async () => {
   // clear
   await Blog.deleteMany({})
+  await User.deleteMany({})
   // save initial blogs
   const blogObjects = helper.initialBlogList.map(blog => new Blog(blog))
   const promiseArray = blogObjects.map(blog => blog.save())
-  await Promise.all(promiseArray)
+  const userObjects = helper.initialUserList.map(user => new User(user))
+  const promiseArray2 = userObjects.map(user => user.save())
+  await Promise.all(promiseArray, promiseArray2)
 })
 
 test('blogs are returned as json', async () => {
@@ -79,7 +83,7 @@ test('respond with 400 bad if title and url missing', async () => {
     likes: 1000,
   }
 
-  const savedBlog = await testApi
+  await testApi
     .post('/api/blogs')
     .send(newPost)
     .expect(400)
@@ -88,7 +92,6 @@ test('respond with 400 bad if title and url missing', async () => {
 test('deletion successful', async () => {
   const postsAtStart = await helper.blogsInDb()
   const blogToDelete = postsAtStart[0]
-  console.log(blogToDelete)
 
   await testApi.delete(`/api/blogs/${blogToDelete.id}`).expect(204)
 
@@ -114,6 +117,24 @@ test('likes are updated successfully', async () => {
   const returnedPostsLikes = returnedPost.body.likes
 
   expect(returnedPostsLikes).toBe(postToUpdate.likes + 1)
+})
+
+test('invalid users cannot be created', async () => {
+  // invalid user
+  const newUser = {
+    username: 'test',
+    name: 'invalid user',
+    password: '12',
+  }
+
+  // post the blog
+  const result = await testApi
+    .post('/api/users')
+    .send(newUser)
+    .expect(400)
+    .expect('Content-Type', /application\/json/)
+
+  expect(result.body.error).toContain('the password is too short')
 })
 
 afterAll(() => {

@@ -1,9 +1,10 @@
 POST http://localhost:3003/api/blogs
 Content-Type: application/json
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlMyIsImlkIjoiNWQ0NmNmODg2NWMzOTE1MmM4ZDk5OTkwIiwiaWF0IjoxNTY0OTQwOTE1fQ.wVt08Qu2J4TxTLy_v3fS1MfSx279xeaeZhQuKljGNWk
 
 {
-  "title": "test",
-  "author": "me",
+  "title": "tester3's post to be deleted",
+  "author": "tester",
   "url": "https://overreacted.io/",
   "likes": 1
 }
