@@ -93,9 +93,9 @@ describe('total likes', () => {
 })
 
 describe('favourite blog', () => {
-  test('of empty blog list is an empty object', () => {
+  test('of empty blog list is null', () => {
     const result = listHelper.favouriteBlog(listWithNoBlogs)
-    expect(result).toEqual({})
+    expect(result).toEqual(null)
   })
 
   test('when list has only one blog is that blog', () => {

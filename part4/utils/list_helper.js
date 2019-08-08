@@ -1,8 +1,6 @@
 let _ = require('lodash')
 
-const dummy = blogs => {
-  return 1
-}
+const dummy = blogs => 1
 
 // total likes of all blogs
 function totalLikes(blogs) {
@@ -17,7 +15,7 @@ function totalLikes(blogs) {
 
 // favourite blog based on likes
 function favouriteBlog(blogs) {
-  if (!blogs.length) return {}
+  if (!blogs.length) return null
   if (blogs.length === 1) return blogs[0]
 
   let mostLiked = blogs[0]
@@ -40,7 +38,7 @@ function mostBlogs(blogs) {
   // one blog? its author
   if (blogs.length === 1) return blogs[0].author
 
-  // lots of blogs? LODASH TO THE RESCUE!
+  // many blogs?
   const authorArray = _.map(blogs, 'author')
   const authorWithMostPosts = _.chain(authorArray) // wraps the object -> enable chaining
     .countBy() //  sorts a list into groups and returns a postCount for the number of objects in each group
@@ -65,6 +63,7 @@ function mostLikes(blogs) {
   // one blog? its author
   if (blogs.length === 1) return blogs[0].author
 
+  // only interested in author name and likes
   const authorsAndLikes = blogs.map(blog => {
     return {
       author: blog.author,
