@@ -11,7 +11,7 @@ loginRouter.post('/', async (request, response) => {
     username: body.username,
   })
   // validate password by comparing returned user's password
-  // with the provided password (both hashed)
+  // with the sent password (both hashed)
   const isPasswordCorrect =
     user === null
       ? false
@@ -31,8 +31,7 @@ loginRouter.post('/', async (request, response) => {
     id: user._id,
   }
 
-  // create token
-  // --> Digital signature, ensures that only parties who know
+  // create token --> Digital signature, ensures that only parties who know
   // the secret can generate a valid token
   const token = jwt.sign(userForToken, process.env.SECRET)
 
