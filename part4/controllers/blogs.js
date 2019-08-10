@@ -14,11 +14,9 @@ blogsRouter.get('/', async (request, response, next) => {
   }
 })
 
-// posting new blogs
-// only for users with valid token
+// posting new blogs for users with valid token
 blogsRouter.post('/', async (request, response, next) => {
   const { body } = request
-  // const token = getTokenFrom(request)
 
   try {
     // jwt.verify() decodes token & returns the object the token was based on

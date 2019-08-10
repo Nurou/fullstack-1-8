@@ -1,15 +1,17 @@
 import React, { useState, useEffect } from 'react'
-import ReactDOM from 'react-dom'
-import loginService from './services/login'
+import { render } from 'react-dom'
+import './index.css'
 import blogsService from './services/blogs'
-import LoginForm from './components/LoginForm'
 import Blog from './components/Blog'
+import FormikLogin from './components/FormikLogin'
+import FormikAddBlog from './components/FormikAddBlog'
+import Notification from './components/Notification'
 
 const App = () => {
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
   const [blogs, setBlogs] = useState([])
+  const [message, setMessage] = useState(null)
+  const [errorMessage, setErrorMessage] = useState(null)
 
   // load up notes
   useEffect(() => {
@@ -26,66 +28,52 @@ const App = () => {
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON)
       setUser(user)
-      loginService.setToken(user.token)
+      blogsService.setToken(user.token)
     }
   }, [])
 
-  const handleLogin = async event => {
-    event.preventDefault()
-    try {
-      // hit the login API
-      const user = await loginService.login({ username, password })
-      // store the token returned by server
-      loginService.setToken(user.token)
-      // save user to local storage
-      window.localStorage.setItem('loggedBloglistUser', JSON.stringify(user))
-      // update current user
-      setUser(user)
-      // clear fields
-      setUsername('')
-      setPassword('')
-    } catch (exception) {
-      console.log(exception)
-    }
-  }
-
   const handleLogout = () => {
+    blogsService.setToken(null)
     window.localStorage.removeItem('loggedBloglistUser')
     setUser(null)
   }
 
-  if (user === null) {
-    return (
-      <div>
-        <h2>Login to the Application</h2>
-        <LoginForm
-          username={username}
-          password={password}
-          setUsername={setUsername}
-          setPassword={setPassword}
-          handleLogin={handleLogin}
-        />
-      </div>
-    )
+  const listBlogs = () => {
+    return blogs.map(blog => <Blog key={blog.id} blog={blog} />)
   }
 
-  return (
-    <div>
+  const displayUserInfo = () => (
+    <>
       <h2>Blogs</h2>
+      {user.name} logged in
       <div>
-        {user.name} logged in
         <button type="submit" onClick={handleLogout}>
           logout
         </button>
       </div>
-
       <br />
-
-      {blogs.map(blog => (
-        <Blog key={blog.id} blog={blog} />
-      ))}
-    </div>
+      <Notification message={message} />
+      <br />
+      <FormikAddBlog
+        blogs={blogs}
+        setBlogs={setBlogs}
+        message={message}
+        setMessage={setMessage}
+      />
+      <br />
+      {listBlogs()}
+    </>
   )
+
+  const displayLogin = () => (
+    <>
+      <h2>Login to the Application</h2>
+      <Notification message={errorMessage} error="true" />
+      <FormikLogin setUser={setUser} setErrorMessage={setErrorMessage} />
+    </>
+  )
+
+  return <>{user ? displayUserInfo() : displayLogin()}</>
 }
 
-ReactDOM.render(<App />, document.getElementById('root'))
+render(<App />, document.getElementById('root'))
