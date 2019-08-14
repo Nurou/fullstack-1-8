@@ -1,11 +1,11 @@
-import React, { useState, useImperativeHandle, Link } from 'react'
-const Blog = React.forwardRef(({ blog }, ref) => {
+import React, { useState, useImperativeHandle } from 'react'
+
+const Blog = React.forwardRef(({ blog, addLike }, ref) => {
   const [visible, setVisible] = useState(false)
 
   const displayWhenVisible = { display: visible ? '' : 'none' }
 
   const toggleVisibility = () => {
-    console.log(blog)
     setVisible(!visible)
   }
 
@@ -20,6 +20,13 @@ const Blog = React.forwardRef(({ blog }, ref) => {
     width: 'auto',
   }
 
+  // capitalise user name
+  const postedBy = blog.user.name
+    .toLowerCase()
+    .split(' ')
+    .map(name => name.charAt(0).toUpperCase() + name.substring(1))
+    .join(' ')
+
   return (
     <>
       <div onClick={toggleVisibility} style={blogStyle}>
@@ -29,12 +36,14 @@ const Blog = React.forwardRef(({ blog }, ref) => {
       <div style={displayWhenVisible}>
         <>
           <div style={blogStyle}>
+            URL:{' '}
             <a href={blog.url} target="_blank" rel="noopener noreferrer">
               {blog.url}
             </a>
             <br />
-            {blog.likes} likes <button>like</button> <br />
-            added by {blog.user.name}
+            Popularity: {blog.likes} likes{' '}
+            <button onClick={addLike}>Like</button> <br />
+            Post added by: {postedBy}
             <br />
           </div>
         </>

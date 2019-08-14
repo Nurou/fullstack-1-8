@@ -39,11 +39,33 @@ const App = () => {
     setUser(null)
   }
 
+  // references
   const blogRef = React.createRef()
   const blogFormRef = React.createRef()
 
+  const handleLikeUpdate = async id => {
+    // get the blog with incremented likes
+    const blog = blogs.find(blog => blog.id === id)
+
+    // create an updated copy
+    const updatedBlog = {
+      ...blog,
+      likes: blog.likes + 1,
+    }
+
+    const returnedBlog = await blogsService.update(id, updatedBlog)
+    setBlogs(blogs.map(blog => (blog.id === id ? returnedBlog : blog)))
+  }
+
   const listBlogs = () => {
-    return blogs.map(blog => <Blog key={blog.id} blog={blog} ref={blogRef} />)
+    return blogs.map(blog => (
+      <Blog
+        key={blog.id}
+        blog={blog}
+        ref={blogRef}
+        addLike={() => handleLikeUpdate(blog.id)}
+      />
+    ))
   }
 
   const displayLoggedInInfo = () => (
@@ -61,9 +83,9 @@ const App = () => {
       <Togglable buttonLabel="new blog" ref={blogFormRef}>
         <FormikAddBlog
           blogs={blogs}
-          setBlogs={setBlogs}
+          updateBlogs={setBlogs}
           message={message}
-          setMessage={setMessage}
+          updateMessage={setMessage}
         />
       </Togglable>
       <br />

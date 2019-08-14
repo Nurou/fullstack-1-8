@@ -31,19 +31,19 @@ const FormikAddBlog = withFormik({
     title,
     author,
     url,
-    setBlogs,
+    updateBlogs,
     blogs,
     message,
-    setMessage,
+    updateMessage,
   }) {
     return {
       title: title || '',
       author: author || '',
       url: url || '',
       blogs: blogs,
-      setBlogs: setBlogs,
+      updateBlogs: updateBlogs,
       message: message,
-      setMessage: setMessage,
+      updateMessage: updateMessage,
     }
   },
   validationSchema: Yup.object().shape({
@@ -63,12 +63,12 @@ const FormikAddBlog = withFormik({
         url: values.url,
       }
       const returnedBlog = await blogsService.create(blogObject)
-      values.setBlogs(values.blogs.concat(returnedBlog))
-      values.setMessage(
+      values.updateBlogs(values.blogs.concat(returnedBlog))
+      values.updateMessage(
         `A new blog ${values.title} by ${values.author} was added!`,
       )
       setTimeout(() => {
-        values.setMessage(null)
+        values.updateMessage(null)
       }, 2000)
       setSubmitting(false)
       resetForm()

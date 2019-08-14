@@ -36,6 +36,7 @@ blogsRouter.post('/', async (request, response, next) => {
 
     // create the new blog post
     const blog = body
+
     // designate the user as post creator
     blog.user = user._id
     blog.author = blog.author === null ? 'unknown' : blog.author
@@ -49,6 +50,7 @@ blogsRouter.post('/', async (request, response, next) => {
     user.blogs = user.blogs.concat(savedBlogPost._id)
     // finally, save the updated user
     await user.save()
+    // respond with saved post
     response.status(201).json(savedBlogPost)
   } catch (exception) {
     next(exception)
@@ -106,7 +108,7 @@ blogsRouter.put('/:id', async (request, response, next) => {
     // Issues a mongodb findAndModify update command by a document's _id field
     const updatedPost = await Blog.findByIdAndUpdate(request.params.id, blog, {
       new: true,
-    })
+    }).populate('user', { username: 1, name: 1 })
     response.json(updatedPost.toJSON())
   } catch (exception) {
     next(exception)
