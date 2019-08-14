@@ -9,3 +9,5 @@
 - [x] 5.5 - Blog posts only displayed when appropriate
 - [x] 5.6 - All of the information about a blog post is displayed when its name is clicked
 - [x] 5.7 - Implement functionality for like button
+- [x] 5.8 - Sort posts by likes
+- [ ] 5.9 - Add a new button for deleting blog posts

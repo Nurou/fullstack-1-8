@@ -17,25 +17,36 @@ const Blog = React.forwardRef(({ blog, addLike }, ref) => {
     border: 'medium solid green',
     borderWidth: 1,
     marginBottom: 5,
-    width: 'auto',
+    width: '50%',
+  }
+  const infoStyle = {
+    paddingTop: 10,
+    paddingLeft: 2,
+    border: 'medium dashed green',
+    borderWidth: 1,
+    marginBottom: 5,
+    width: '50%',
   }
 
   // capitalise user name
-  const postedBy = blog.user.name
-    .toLowerCase()
-    .split(' ')
-    .map(name => name.charAt(0).toUpperCase() + name.substring(1))
-    .join(' ')
+  // const postedBy =
+  //   blog.user.name
+  //     .toLowerCase()
+  //     .split(' ')
+  //     .map(name => name.charAt(0).toUpperCase() + name.substring(1))
+  //     .join(' ')
 
   return (
     <>
       <div onClick={toggleVisibility} style={blogStyle}>
-        {blog.title} {blog.author}
+        <strong>
+          {blog.title} {blog.author}
+        </strong>
       </div>
 
       <div style={displayWhenVisible}>
         <>
-          <div style={blogStyle}>
+          <div style={infoStyle}>
             URL:{' '}
             <a href={blog.url} target="_blank" rel="noopener noreferrer">
               {blog.url}
@@ -43,7 +54,7 @@ const Blog = React.forwardRef(({ blog, addLike }, ref) => {
             <br />
             Popularity: {blog.likes} likes{' '}
             <button onClick={addLike}>Like</button> <br />
-            Post added by: {postedBy}
+            Post added by: {blog.user.name}
             <br />
           </div>
         </>
