@@ -29,14 +29,14 @@ const FormikLogin = withFormik({
       setErrorMessage: setErrorMessage,
     }
   },
-  // validationSchema: Yup.object().shape({
-  //   username: Yup.string()
-  //     .min(5, 'minimum 5 characters')
-  //     .required('username is required'),
-  //   password: Yup.string()
-  //     .min(5, 'minimum 5 characters')
-  //     .required('password is required'),
-  // }),
+  validationSchema: Yup.object().shape({
+    username: Yup.string()
+      .min(5, 'minimum 5 characters')
+      .required('username is required'),
+    password: Yup.string()
+      .min(5, 'minimum 5 characters')
+      .required('password is required'),
+  }),
   async handleSubmit(
     { username, password, setUser, setErrorMessage },
     { setSubmitting, resetForm },

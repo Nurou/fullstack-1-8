@@ -6,6 +6,7 @@ import Blog from './components/Blog'
 import FormikLogin from './components/FormikLogin'
 import FormikAddBlog from './components/FormikAddBlog'
 import Notification from './components/Notification'
+import Togglable from './components/Togglable'
 
 const App = () => {
   const [user, setUser] = useState(null)
@@ -38,11 +39,14 @@ const App = () => {
     setUser(null)
   }
 
+  const blogRef = React.createRef()
+  const blogFormRef = React.createRef()
+
   const listBlogs = () => {
-    return blogs.map(blog => <Blog key={blog.id} blog={blog} />)
+    return blogs.map(blog => <Blog key={blog.id} blog={blog} ref={blogRef} />)
   }
 
-  const displayUserInfo = () => (
+  const displayLoggedInInfo = () => (
     <>
       <h2>Blogs</h2>
       {user.name} logged in
@@ -54,12 +58,14 @@ const App = () => {
       <br />
       <Notification message={message} />
       <br />
-      <FormikAddBlog
-        blogs={blogs}
-        setBlogs={setBlogs}
-        message={message}
-        setMessage={setMessage}
-      />
+      <Togglable buttonLabel="new blog" ref={blogFormRef}>
+        <FormikAddBlog
+          blogs={blogs}
+          setBlogs={setBlogs}
+          message={message}
+          setMessage={setMessage}
+        />
+      </Togglable>
       <br />
       {listBlogs()}
     </>
@@ -73,7 +79,7 @@ const App = () => {
     </>
   )
 
-  return <>{user ? displayUserInfo() : displayLogin()}</>
+  return <>{user ? displayLoggedInInfo() : displayLogin()}</>
 }
 
 render(<App />, document.getElementById('root'))
