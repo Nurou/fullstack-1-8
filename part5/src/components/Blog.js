@@ -31,29 +31,27 @@ const Blog = React.forwardRef(({ blog, addLike, removePost, user }, ref) => {
 
   return (
     <>
-      <div onClick={toggleVisibility} style={blogStyle}>
+      <div onClick={toggleVisibility} style={blogStyle} className="defaultInfo">
         <strong>
           {blog.title} {blog.author}
         </strong>
       </div>
 
-      <div style={displayWhenVisible}>
-        <>
-          <div style={infoStyle}>
-            URL:{' '}
-            <a href={blog.url} target="_blank" rel="noopener noreferrer">
-              {blog.url}
-            </a>
-            <br />
-            Popularity: {blog.likes} likes{' '}
-            <button onClick={addLike}>Like</button> <br />
-            Post added by: {blog.user.name}
-            <br />
-            <button onClick={removePost} style={displayButton}>
-              Remove
-            </button>
-          </div>
-        </>
+      <div style={displayWhenVisible} className="allInfo">
+        <div style={infoStyle}>
+          URL:{' '}
+          <a href={blog.url} target="_blank" rel="noopener noreferrer">
+            {blog.url}
+          </a>
+          <br />
+          Popularity: {blog.likes} likes <button onClick={addLike}>Like</button>{' '}
+          <br />
+          Post added by: {blog.user.name}
+          <br />
+          <button onClick={removePost} style={displayButton}>
+            Remove
+          </button>
+        </div>
       </div>
     </>
   )

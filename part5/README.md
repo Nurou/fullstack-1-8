@@ -14,3 +14,6 @@
 - [x] 5.10 - Show the button for deleting a blog post only if the blog post was added by the user
 - [x] 5.11 - Define PropTypes for one of the components
 - [x] 5.12 - Add ESlint to the project with custom configuration. Fix all linter errors
+- [x] 5.13 - Write and test mock component
+- [x] 5.14 - Test like button
+- [x] 5.15 - Write tests for the Blog component of your application
