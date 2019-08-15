@@ -87,8 +87,9 @@ blogsRouter.delete('/:id', async (request, response, next) => {
     }
 
     // everything cool? remove the blog
-    await Blog.findByIdAndRemove(request.params.id)
-    response.status(204).end()
+    const deletedBlog = await Blog.findByIdAndRemove(request.params.id)
+    // response.status(204).end()
+    response.status(202).json(deletedBlog.toJSON())
   } catch (exception) {
     next(exception)
   }

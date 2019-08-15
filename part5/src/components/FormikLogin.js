@@ -1,18 +1,19 @@
 import React from 'react'
-import { withFormik, Form, Field } from 'formik'
+import { withFormik, Form, Field, ErrorMessage } from 'formik'
 import loginService from '../services/login'
 import blogsService from '../services/blogs'
 import * as Yup from 'yup'
+import PropTypes from 'prop-types'
 
-const LoginForm = ({ errors, touched, isSubmitting }) => (
+const LoginForm = ({ isSubmitting }) => (
   <Form>
     <div>
-      {/* {touched.username && errors.username && <p>{errors.username}</p>} */}
       <Field type="username" name="username" placeholder="username" />
+      <ErrorMessage name="username" />
     </div>
     <div>
-      {/* {touched.password && errors.password && <p>{errors.password}</p>} */}
       <Field type="password" name="password" placeholder="password" />
+      <ErrorMessage name="password" />
     </div>
     <button disabled={isSubmitting} type="submit">
       Login
@@ -31,7 +32,7 @@ const FormikLogin = withFormik({
   },
   validationSchema: Yup.object().shape({
     username: Yup.string()
-      .min(5, 'minimum 5 characters')
+      .min(3, 'minimum 3 characters')
       .required('username is required'),
     password: Yup.string()
       .min(5, 'minimum 5 characters')
@@ -39,7 +40,7 @@ const FormikLogin = withFormik({
   }),
   async handleSubmit(
     { username, password, setUser, setErrorMessage },
-    { setSubmitting, resetForm },
+    { setSubmitting },
   ) {
     try {
       // hit the login API
@@ -48,7 +49,7 @@ const FormikLogin = withFormik({
       blogsService.setToken(user.token)
       // save user to local storage
       window.localStorage.setItem('loggedBloglistUser', JSON.stringify(user))
-      // update user
+      // set logged in user as the user
       setUser(user)
       setSubmitting(false)
     } catch (exception) {
@@ -61,5 +62,10 @@ const FormikLogin = withFormik({
     }
   },
 })(LoginForm)
+
+FormikLogin.propTypes = {
+  setUser: PropTypes.func.isRequired,
+  setErrorMessage: PropTypes.func.isRequired,
+}
 
 export default FormikLogin

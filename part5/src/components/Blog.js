@@ -1,9 +1,10 @@
 import React, { useState, useImperativeHandle } from 'react'
 
-const Blog = React.forwardRef(({ blog, addLike }, ref) => {
+const Blog = React.forwardRef(({ blog, addLike, removePost, user }, ref) => {
   const [visible, setVisible] = useState(false)
 
   const displayWhenVisible = { display: visible ? '' : 'none' }
+  const displayButton = { display: user.name === blog.user.name ? '' : 'none' }
 
   const toggleVisibility = () => {
     setVisible(!visible)
@@ -28,14 +29,6 @@ const Blog = React.forwardRef(({ blog, addLike }, ref) => {
     width: '50%',
   }
 
-  // capitalise user name
-  // const postedBy =
-  //   blog.user.name
-  //     .toLowerCase()
-  //     .split(' ')
-  //     .map(name => name.charAt(0).toUpperCase() + name.substring(1))
-  //     .join(' ')
-
   return (
     <>
       <div onClick={toggleVisibility} style={blogStyle}>
@@ -56,6 +49,9 @@ const Blog = React.forwardRef(({ blog, addLike }, ref) => {
             <button onClick={addLike}>Like</button> <br />
             Post added by: {blog.user.name}
             <br />
+            <button onClick={removePost} style={displayButton}>
+              Remove
+            </button>
           </div>
         </>
       </div>

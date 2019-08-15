@@ -57,6 +57,22 @@ const App = () => {
     setBlogs(blogs.map(blog => (blog.id === id ? returnedBlog : blog)))
   }
 
+  const handlePostRemoval = async id => {
+    // get blog to be removed
+    const blogToRemove = blogs.find(blog => blog.id === id)
+
+    // prompt
+    const isConfirmed = window.confirm(
+      `Remove blog ${blogToRemove.title} by ${blogToRemove.author} ?`,
+    )
+
+    if (isConfirmed) {
+      await blogsService.remove(id)
+      // update UI
+      setBlogs(blogs.filter(blog => blog.id !== blogToRemove.id))
+    }
+  }
+
   const listBlogs = () => {
     // blog with most likes on top
     const sortedBlogs = blogs.sort((a, b) => b.likes - a.likes)
@@ -67,6 +83,8 @@ const App = () => {
         blog={blog}
         ref={blogRef}
         addLike={() => handleLikeUpdate(blog.id)}
+        removePost={() => handlePostRemoval(blog.id)}
+        user={user}
       />
     ))
   }

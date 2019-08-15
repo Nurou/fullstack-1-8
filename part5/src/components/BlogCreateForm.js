@@ -21,7 +21,9 @@ const BlogCreateForm = ({ blogs, setBlogs }) => {
       setTitle('')
       setAuthor('')
       setUrl('')
-    } catch (exception) {}
+    } catch (exception) {
+      console.log(exception)
+    }
   }
   return (
     <form onSubmit={addBlog}>

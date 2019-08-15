@@ -1,27 +1,30 @@
 import React from 'react'
-import { withFormik, Form, Field } from 'formik'
+import { withFormik, Form, Field, ErrorMessage } from 'formik'
 import blogsService from '../services/blogs'
 import * as Yup from 'yup'
+import PropTypes from 'prop-types'
 
-const CreateBlog = ({ errors, touched, isSubmitting }) => (
-  <Form>
-    <div>
-      {touched.title && errors.title && <p>{errors.title}</p>}
-      <Field type="text" name="title" placeholder="title" />
-    </div>
-    <div>
-      {touched.author && errors.author && <p>{errors.author}</p>}
-      <Field type="text" name="author" placeholder="author" />
-    </div>
-    <div>
-      {touched.url && errors.url && <p>{errors.url}</p>}
-      <Field type="url" name="url" placeholder="url" />
-    </div>
-    <button disabled={isSubmitting} type="submit">
-      Create
-    </button>
-  </Form>
-)
+const CreateBlog = ({ isSubmitting }) => {
+  return (
+    <Form>
+      <div>
+        <Field type="text" name="title" placeholder="title" />
+        <ErrorMessage name="title" />
+      </div>
+      <div>
+        <Field type="text" name="author" placeholder="author" />
+        <ErrorMessage name="author" />
+      </div>
+      <div>
+        <Field type="url" name="url" placeholder="url" />
+        <ErrorMessage name="url" />
+      </div>
+      <button disabled={isSubmitting} type="submit">
+        Create
+      </button>
+    </Form>
+  )
+}
 
 // form logic lives within withFormik()
 const FormikAddBlog = withFormik({
@@ -49,6 +52,7 @@ const FormikAddBlog = withFormik({
   validationSchema: Yup.object().shape({
     title: Yup.string().required('title is required'),
     author: Yup.string()
+      // eslint-disable-next-line quotes
       .min(3, "author's name must be at least 3 characters long")
       .required('author is required'),
     url: Yup.string()
@@ -72,8 +76,16 @@ const FormikAddBlog = withFormik({
       }, 2000)
       setSubmitting(false)
       resetForm()
-    } catch (exception) {}
+    } catch (exception) {
+      console.log(exception)
+    }
   },
 })(CreateBlog)
+
+FormikAddBlog.propTypes = {
+  blogs: PropTypes.array.isRequired,
+  updateBlogs: PropTypes.func.isRequired,
+  updateMessage: PropTypes.func.isRequired,
+}
 
 export default FormikAddBlog
