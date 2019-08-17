@@ -46,6 +46,8 @@ blogsRouter.post('/', async (request, response, next) => {
 
     // save post
     const savedBlogPost = await blogObject.save()
+    // populate user - save() is not a query --> must do stuff differently:
+    savedBlogPost.populate('user').execPopulate()
     // add the post to user's posts
     user.blogs = user.blogs.concat(savedBlogPost._id)
     // finally, save the updated user

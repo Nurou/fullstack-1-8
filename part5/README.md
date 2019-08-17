@@ -17,3 +17,5 @@
 - [x] 5.13 - Write and test mock component
 - [x] 5.14 - Test like button
 - [x] 5.15 - Write tests for the Blog component of your application
+- [x] 5.16 - Write an integration test verifying user login
+- [x] 5.17 - Write another integration test verifying blog post rendering when user is logged in

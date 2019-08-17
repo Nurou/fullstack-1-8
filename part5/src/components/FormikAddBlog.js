@@ -78,6 +78,7 @@ const FormikAddBlog = withFormik({
       resetForm()
     } catch (exception) {
       console.log(exception)
+      resetForm()
     }
   },
 })(CreateBlog)
