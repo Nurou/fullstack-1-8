@@ -3,11 +3,8 @@ import React, { useState, useImperativeHandle } from 'react'
 const Blog = React.forwardRef(({ blog, addLike, removePost, user }, ref) => {
   const [visible, setVisible] = useState(false)
 
-  let blogsCreator = null
-  if (!blog.user) blogsCreator = ''
-
   let currentUser = user.name
-  blogsCreator = blog.user.name
+  let blogsCreator = blog.user.name
 
   const displayWhenVisible = { display: visible ? '' : 'none' }
   const displayButton = {
@@ -62,9 +59,10 @@ const Blog = React.forwardRef(({ blog, addLike, removePost, user }, ref) => {
           <br />
           Post added by: {blog.user.name}
           <br />
-          <button onClick={removePost} style={displayButton}>
+          {/* <button onClick={removePost} style={displayButton}>
             Remove
-          </button>
+          </button> */}
+          {user && currentUser === blogsCreator && removalButton()}
         </div>
       </div>
     </div>
