@@ -4,22 +4,28 @@ import loginService from '../services/login'
 import blogsService from '../services/blogs'
 import * as Yup from 'yup'
 import PropTypes from 'prop-types'
+import { useField } from '../hooks/index'
 
-const LoginForm = ({ isSubmitting }) => (
-  <Form>
+const LoginForm = ({ isSubmitting }) => {
+  return (
     <div>
-      <Field type="username" name="username" placeholder="username" />
-      <ErrorMessage name="username" />
+      <h2>Login to the Application</h2>
+      <Form>
+        <div>
+          <Field type="username" name="username" placeholder="username" />
+          <ErrorMessage name="username" />
+        </div>
+        <div>
+          <Field type="password" name="password" placeholder="password" />
+          <ErrorMessage name="password" />
+        </div>
+        <button disabled={isSubmitting} type="submit">
+          Login
+        </button>
+      </Form>
     </div>
-    <div>
-      <Field type="password" name="password" placeholder="password" />
-      <ErrorMessage name="password" />
-    </div>
-    <button disabled={isSubmitting} type="submit">
-      Login
-    </button>
-  </Form>
-)
+  )
+}
 
 const FormikLogin = withFormik({
   mapPropsToValues({ username, password, setUser, setErrorMessage }) {

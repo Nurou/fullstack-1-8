@@ -2,9 +2,10 @@ import React, { useState, useEffect } from 'react'
 import './index.css'
 import blogsService from './services/blogs'
 import Blog from './components/Blog'
-import FormikLogin from './components/FormikLogin'
 import FormikAddBlog from './components/FormikAddBlog'
 import Notification from './components/Notification'
+import LoginForm from './components/LoginForm'
+import BlogForm from './components/BlogForm'
 import Togglable from './components/Togglable'
 
 const App = () => {
@@ -88,20 +89,29 @@ const App = () => {
     ))
   }
 
+  const capitalizeFirsts = text => {
+    return text
+      .toLowerCase()
+      .split(' ')
+      .map(s => s.charAt(0).toUpperCase() + s.substring(1))
+      .join(' ')
+  }
+
   const displayLoggedInInfo = () => (
     <>
       <h2>Blogs</h2>
-      {user.name} logged in
+      {capitalizeFirsts(user.name)} is currently logged in
       <div>
+        <br />
         <button type="submit" onClick={handleLogout}>
-          logout
+          Logout
         </button>
       </div>
       <br />
       <Notification message={message} />
       <br />
-      <Togglable buttonLabel="new blog" ref={blogFormRef}>
-        <FormikAddBlog
+      <Togglable buttonLabel="New Blog" ref={blogFormRef}>
+        <BlogForm
           blogs={blogs}
           updateBlogs={setBlogs}
           message={message}
@@ -115,9 +125,8 @@ const App = () => {
 
   const displayLogin = () => (
     <>
-      <h2>Login to the Application</h2>
       <Notification message={errorMessage} error="true" />
-      <FormikLogin setUser={setUser} setErrorMessage={setErrorMessage} />
+      <LoginForm setUser={setUser} setError={setErrorMessage} />
     </>
   )
 

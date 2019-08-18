@@ -18,4 +18,8 @@
 - [x] 5.14 - Test like button
 - [x] 5.15 - Write tests for the Blog component of your application
 - [x] 5.16 - Write an integration test verifying user login
-- [x] 5.17 - Write another integration test verifying blog post rendering when user is logged in
+- [x] 5.17 - Write a custom UseField hook for form fields
+- [x] 5.18 - Write another integration test verifying blog post rendering when user is logged in
+- [x] 5.19 - Add form clearing ability to custom useField hook
+- [x] 5.20 - Spread syntax manipulation for passing in props to form inputs
+- [x] 5.21 - Custom hook for communicating with backend

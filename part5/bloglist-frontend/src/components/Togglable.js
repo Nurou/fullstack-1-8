@@ -28,7 +28,7 @@ const Togglable = React.forwardRef((props, ref) => {
       {/* show the component and a cancel option that hides it again */}
       <div style={showWhenVisible}>
         {props.children}
-        <button onClick={toggleVisibility}>cancel</button>
+        <button onClick={toggleVisibility}>Cancel</button>
       </div>
     </>
   )
