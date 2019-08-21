@@ -23,3 +23,9 @@
 - [x] 5.19 - Add form clearing ability to custom useField hook
 - [x] 5.20 - Spread syntax manipulation for passing in props to form inputs
 - [x] 5.21 - Custom hook for communicating with backend
+
+---
+
+## Demo of Finished Exercise
+
+![](../../assets/bloglist-fe.gif)
