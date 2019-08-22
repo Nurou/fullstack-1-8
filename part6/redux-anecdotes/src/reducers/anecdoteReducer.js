@@ -7,14 +7,6 @@ const anecdotesAtStart = [
   'Debugging is twice as hard as writing the code in the first place. Therefore, if you write the code as cleverly as possible, you are, by definition, not smart enough to debug it.',
 ]
 
-/**
-|--------------------------------------------------
-| 
-Implement functionality for voting anecdotes. 
-The amount of votes must be saved to a Redux-store.
-|--------------------------------------------------
-*/
-
 const getId = () => (100000 * Math.random()).toFixed(0)
 
 const asObject = anecdote => {
@@ -31,6 +23,8 @@ const reducer = (state = initialState, action) => {
   console.log('state now: ', state)
   console.log('action', action)
 
+  // sort anecdotes by likes
+
   switch (action.type) {
     case 'VOTE':
       const id = action.data.id
@@ -39,7 +33,12 @@ const reducer = (state = initialState, action) => {
         ...anecdoteToChange,
         votes: anecdoteToChange.votes + 1,
       }
-      return state.map(a => (a.id === id ? changedAnecdote : a))
+      return state
+        .map(a => (a.id === id ? changedAnecdote : a))
+        .sort((a, b) => b.votes - a.votes)
+    case 'NEW_ANECDOTE':
+      const anecdote = action.data
+      return state.concat(anecdote)
     default:
       return state
   }
@@ -49,6 +48,17 @@ export const addVote = id => {
   return {
     type: 'VOTE',
     data: { id },
+  }
+}
+
+export const createAnecdote = anecdote => {
+  return {
+    type: 'NEW_ANECDOTE',
+    data: {
+      content: anecdote,
+      id: getId(),
+      votes: 0,
+    },
   }
 }
 
