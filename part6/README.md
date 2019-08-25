@@ -17,6 +17,7 @@
 - [x] 6.8 - Separate rendering of anecdote into its own component along with its logic
 - [x] 6.9 - Render notifications from Redux store
 - [x] 6.10 - Display a notification when user up votes or adds a new anecdote
+- [x] 6.11 - Implement filtering for the anecdotes that are displayed to the user
 
 ---
 
