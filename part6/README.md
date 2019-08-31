@@ -22,6 +22,8 @@
 - [x] 6.13 - Same for the Filter and AnecdoteForm components
 - [x] 6.14 - Make voting for anecdotes work again, refactor the Notification component to use connect, remove the redundant passing of the store's state via props
 - [x] 6.15 - AnecdoteList component only receives a single prop based on the store's state
+- [x] 6.16 - Fetch the anecdotes from the backend implemented with json-server upon launch
+- [x] 6.17 - Store anecdotes in the backend.
 
 ---
 
