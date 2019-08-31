@@ -40,6 +40,8 @@ const AnecdoteForm = props => {
 }
 
 const mapStateToProps = state => {
+  // retrieving the state of the notification
+  // from store and returning a prop that holds it
   return {
     notification: state.notification,
   }

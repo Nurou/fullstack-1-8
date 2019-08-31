@@ -1,19 +1,8 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import { createStore, combineReducers } from 'redux'
 import { Provider } from 'react-redux'
 import App from './App'
-import anecdoteReducer from './reducers/anecdoteReducer'
-import notificationReducer from './reducers/notificationReducer'
-import filterReducer from './reducers/filterReducer'
-
-const reducer = combineReducers({
-  anecdotes: anecdoteReducer,
-  notification: notificationReducer,
-  filter: filterReducer,
-})
-
-const store = createStore(reducer)
+import store from './store'
 
 const render = () =>
   ReactDOM.render(
@@ -27,3 +16,11 @@ render()
 // whenever state changes, render (listener) will be called
 // in effect, the app re-renders with each state update
 store.subscribe(render)
+
+/**
+|--------------------------------------------------
+| Task: 
+Modify the initialization of redux-store to happen using
+ asynchronous action creators, which are made possible by the redux-thunk-library.
+|--------------------------------------------------
+*/
