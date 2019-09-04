@@ -48,10 +48,15 @@ export const addVote = id => {
   }
 }
 
-export const createAnecdote = data => {
-  return {
-    type: 'NEW_ANECDOTE',
-    data,
+// anecdotes are created through async action creators
+// made possible by redux thunk middleware
+export const createAnecdote = content => {
+  return async dispatch => {
+    const newAnecdote = await anecdoteService.createAnecdote(content)
+    dispatch({
+      type: 'NEW_ANECDOTE',
+      data: newAnecdote,
+    })
   }
 }
 
