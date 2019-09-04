@@ -7,10 +7,7 @@ import { connect } from 'react-redux'
 const AnecdoteList = props => {
   const handleVote = anecdote => {
     props.addVote(anecdote.id)
-    props.addNotification(`You voted "${anecdote.content}"`)
-    setTimeout(() => {
-      props.addNotification(null)
-    }, 5000)
+    props.addNotification(`You voted "${anecdote.content}"`, 1)
   }
 
   const listAnecdotes = () =>
@@ -25,8 +22,7 @@ const AnecdoteList = props => {
     ))
 
   const displayNotification = () =>
-    props.notification &&
-    props.notification.includes('voted') && <Notification />
+    props.notificationToDisplay && <Notification />
 
   return (
     <div>
@@ -44,6 +40,7 @@ const anecdotesToShow = props => {
 const mapStateToProps = state => {
   return {
     visibleAnecdotes: anecdotesToShow(state),
+    notificationToDisplay: state.notification,
   }
 }
 
