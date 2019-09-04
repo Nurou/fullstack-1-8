@@ -24,6 +24,10 @@
 - [x] 6.15 - AnecdoteList component only receives a single prop based on the store's state
 - [x] 6.16 - Fetch the anecdotes from the backend implemented with json-server upon launch
 - [x] 6.17 - Store anecdotes in the backend.
+- [x] 6.18 - Initialization of redux-store to happens using asynchronous action creators, using redux-thunk-library
+- [x] 6.19 - Creation of a new anecdote to happens using asynchronous action creators
+- [x] 6.20 - Save votes to backend
+- [x] 6.21 - Use asynchronous action creator for setting notifications
 
 ---
 

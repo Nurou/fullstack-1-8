@@ -120,7 +120,7 @@ c) Communicating with server in a redux application
 ### Exercises
 
 - [x] Unicafe Redux
-- [ ] Anecdotes Redux
+- [x] Anecdotes Redux
 
 ---
 
