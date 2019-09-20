@@ -3,10 +3,21 @@ import {
   BrowserRouter as Router, //
   Route,
   Link,
+  withRouter,
 } from 'react-router-dom'
 
 // links are in the Menu component
-const Menu = ({ anecdotes, anecdoteById }) => {
+const Menu = ({
+  anecdotes,
+  anecdoteById,
+  addNew,
+  notification,
+  setNotification,
+}) => {
+  // wrap anecdote creation form with router
+  // to enable redirection after creation
+  const CreateNewEnhanced = withRouter(CreateNew)
+
   const padding = {
     paddingRight: 5,
   }
@@ -27,9 +38,20 @@ const Menu = ({ anecdotes, anecdoteById }) => {
         <Route
           exact
           path="/"
-          render={() => <AnecdoteList anecdotes={anecdotes} />}
+          render={() => (
+            <AnecdoteList anecdotes={anecdotes} notification={notification} />
+          )}
         />
-        <Route path="/create" render={() => <CreateNew />} />
+        {/* <Route path="/create" render={() => <CreateNew addNew={addNew} />} /> */}
+        <Route
+          path="/create"
+          render={() => (
+            <CreateNewEnhanced
+              addNew={addNew}
+              setNotification={setNotification}
+            />
+          )}
+        />
         <Route path="/about" render={() => <About />} />
         {/* parametrized route */}
         <Route
@@ -44,14 +66,15 @@ const Menu = ({ anecdotes, anecdoteById }) => {
   )
 }
 
-const AnecdoteList = ({ anecdotes }) => (
+const AnecdoteList = ({ anecdotes, notification }) => (
   <div>
+    {notification && notification}
     <h2>Anecdotes</h2>
     <ul>
       {anecdotes.map(anecdote => {
         return (
-          <Link to={`/anecdotes/${anecdote.id}`}>
-            <li key={anecdote.id}>{anecdote.content}</li>
+          <Link to={`/anecdotes/${anecdote.id}`} key={anecdote.id}>
+            <li>{anecdote.content}</li>
           </Link>
         )
       })}
@@ -108,6 +131,12 @@ const CreateNew = props => {
       info,
       votes: 0,
     })
+    // redirect user to anecdotes listing
+    props.history.push('/')
+    props.setNotification(`a new anecdote ${content} was created!`)
+    setTimeout(() => {
+      props.setNotification(null)
+    }, 10000)
   }
 
   return (
@@ -183,11 +212,17 @@ const App = () => {
   }
 
   return (
-    <div>
+    <>
       <h1>Software anecdotes</h1>
-      <Menu anecdotes={anecdotes} anecdoteById={anecdoteById} />
+      <Menu
+        anecdotes={anecdotes} //
+        anecdoteById={anecdoteById}
+        addNew={addNew}
+        notification={notification}
+        setNotification={setNotification}
+      />
       <Footer /> {/* Always visible */}
-    </div>
+    </>
   )
 }
 
