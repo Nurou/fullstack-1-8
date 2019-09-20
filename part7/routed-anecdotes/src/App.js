@@ -6,7 +6,7 @@ import {
 } from 'react-router-dom'
 
 // links are in the Menu component
-const Menu = ({ anecdotes }) => {
+const Menu = ({ anecdotes, anecdoteById }) => {
   const padding = {
     paddingRight: 5,
   }
@@ -31,6 +31,14 @@ const Menu = ({ anecdotes }) => {
         />
         <Route path="/create" render={() => <CreateNew />} />
         <Route path="/about" render={() => <About />} />
+        {/* parametrized route */}
+        <Route
+          exact
+          path="/anecdotes/:id"
+          render={({ match }) => (
+            <h1>{anecdoteById(match.params.id).content}</h1>
+          )}
+        />
       </Router>
     </div>
   )
@@ -40,9 +48,13 @@ const AnecdoteList = ({ anecdotes }) => (
   <div>
     <h2>Anecdotes</h2>
     <ul>
-      {anecdotes.map(anecdote => (
-        <li key={anecdote.id}>{anecdote.content}</li>
-      ))}
+      {anecdotes.map(anecdote => {
+        return (
+          <Link to={`/anecdotes/${anecdote.id}`}>
+            <li key={anecdote.id}>{anecdote.content}</li>
+          </Link>
+        )
+      })}
     </ul>
   </div>
 )
@@ -173,7 +185,7 @@ const App = () => {
   return (
     <div>
       <h1>Software anecdotes</h1>
-      <Menu anecdotes={anecdotes} />
+      <Menu anecdotes={anecdotes} anecdoteById={anecdoteById} />
       <Footer /> {/* Always visible */}
     </div>
   )
