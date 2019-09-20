@@ -142,6 +142,8 @@ f) Exercises: extending the bloglist
 
 ### Exercises
 
+- [] Routed anecdotes
+
 ---
 
 ### Part 8 - GraphQL
