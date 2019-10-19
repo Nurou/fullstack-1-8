@@ -2,8 +2,10 @@ import { useField } from '../hooks/index'
 import blogsService from '../services/blogs'
 import React from 'react'
 import PropTypes from 'prop-types'
+import { addNotification } from '../reducers/notificationReducer'
+import { connect } from 'react-redux'
 
-const BlogForm = ({ blogs, updateBlogs, updateMessage }) => {
+const BlogForm = ({ blogs, updateBlogs, updateMessage, notification }) => {
   const title = useField('text', 'title')
   const author = useField('text', 'author')
   const url = useField('url', 'url')
@@ -24,9 +26,15 @@ const BlogForm = ({ blogs, updateBlogs, updateMessage }) => {
       }
       const returnedBlog = await blogsService.create(blogObject)
       updateBlogs(blogs.concat(returnedBlog))
-      updateMessage(`A new blog ${title.value} by ${author.value} was added!`)
+      // updateMessage(`A new blog ${title.value} by ${author.value} was added!`)
+      // setTimeout(() => {
+      //   updateMessage(null)
+      // }, 2000)
+      notification.addNotification(
+        `A new blog ${title.value} by ${author.value} was added!`,
+      )
       setTimeout(() => {
-        updateMessage(null)
+        notification.addNotification(null)
       }, 2000)
       resetForm()
     } catch (exception) {
@@ -56,4 +64,14 @@ BlogForm.propTypes = {
   updateMessage: PropTypes.func.isRequired,
 }
 
-export default BlogForm
+// redux
+const mapStateToProps = state => {
+  // retrieving the state of the notification
+  // from store and returning a prop that holds it
+  return {
+    notification: state.notification,
+  }
+}
+
+// export default BlogForm
+export default connect(mapStateToProps)(BlogForm)

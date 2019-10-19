@@ -13,10 +13,15 @@ const Notification = props => {
   return <div style={style}>{props.message}</div>
 }
 
+// state (store) available to all of App's child components
 const mapStateToProps = state => {
   return {
+    // message stored in state
     message: state.notification,
   }
 }
 
+// mapStateToProps returns the notif from state
+// which then gets injected into Notif component
+// hence why it can access it through its props
 export default connect(mapStateToProps)(Notification)
