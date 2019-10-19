@@ -41,4 +41,5 @@ h1 {
   border-radius: 5px;
   padding: 10px;
   margin-bottom: 10px;
+  max-width: 50%;
 }

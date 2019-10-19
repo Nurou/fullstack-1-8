@@ -2,10 +2,16 @@ import { useField } from '../hooks/index'
 import blogsService from '../services/blogs'
 import React from 'react'
 import PropTypes from 'prop-types'
-import { addNotification } from '../reducers/notificationReducer'
 import { connect } from 'react-redux'
+import { addNotification } from '../reducers/notificationReducer'
 
-const BlogForm = ({ blogs, updateBlogs, updateMessage, notification }) => {
+const BlogForm = ({
+  blogs,
+  updateBlogs,
+  updateMessage,
+  notification,
+  addNotification,
+}) => {
   const title = useField('text', 'title')
   const author = useField('text', 'author')
   const url = useField('url', 'url')
@@ -30,12 +36,10 @@ const BlogForm = ({ blogs, updateBlogs, updateMessage, notification }) => {
       // setTimeout(() => {
       //   updateMessage(null)
       // }, 2000)
-      notification.addNotification(
+      addNotification(
         `A new blog ${title.value} by ${author.value} was added!`,
+        2,
       )
-      setTimeout(() => {
-        notification.addNotification(null)
-      }, 2000)
       resetForm()
     } catch (exception) {
       console.log(exception)
@@ -69,9 +73,16 @@ const mapStateToProps = state => {
   // retrieving the state of the notification
   // from store and returning a prop that holds it
   return {
-    notification: state.notification,
+    notification: state,
   }
 }
 
+const mapDispatchToProps = {
+  addNotification,
+}
+
 // export default BlogForm
-export default connect(mapStateToProps)(BlogForm)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(BlogForm)

@@ -40,6 +40,7 @@
   "devDependencies": {
     "@testing-library/jest-dom": "^4.0.0",
     "@testing-library/react": "^9.1.2",
+    "deep-freeze": "0.0.1",
     "eslint-plugin-react-hooks": "^1.7.0"
   }
 }

@@ -7,6 +7,8 @@ import LoginForm from './components/LoginForm'
 import BlogForm from './components/BlogForm'
 import Togglable from './components/Togglable'
 
+// TODO: move message display from here to BlogForm component
+
 const App = () => {
   const [user, setUser] = useState(null)
   const [blogs, setBlogs] = useState([])
