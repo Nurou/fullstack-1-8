@@ -1,17 +1,13 @@
 import { useField } from '../hooks/index'
-import blogsService from '../services/blogs'
 import React from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { addNotification } from '../reducers/notificationReducer'
+import { addBlog } from '../reducers/blogsReducer'
+import Notification from '../components/Notification'
 
-const BlogForm = ({
-  blogs,
-  updateBlogs,
-  updateMessage,
-  notification,
-  addNotification,
-}) => {
+const BlogForm = ({ addNotification, addBlog }) => {
+  // custom hook for fields
   const title = useField('text', 'title')
   const author = useField('text', 'author')
   const url = useField('url', 'url')
@@ -30,12 +26,8 @@ const BlogForm = ({
         author: author.value,
         url: url.value,
       }
-      const returnedBlog = await blogsService.create(blogObject)
-      updateBlogs(blogs.concat(returnedBlog))
-      // updateMessage(`A new blog ${title.value} by ${author.value} was added!`)
-      // setTimeout(() => {
-      //   updateMessage(null)
-      // }, 2000)
+      // add to backend & redux store
+      addBlog(blogObject)
       addNotification(
         `A new blog ${title.value} by ${author.value} was added!`,
         2,
@@ -47,38 +39,42 @@ const BlogForm = ({
   }
 
   return (
-    <form onSubmit={handleSubmit}>
-      <div>
-        <input {...title.excludeReset} />
-      </div>
-      <div>
-        <input {...author.excludeReset} />
-      </div>
-      <div>
-        <input {...url.excludeReset} />
-      </div>
-      <button type="submit">Create</button>
-    </form>
+    <>
+      <Notification />
+      <form onSubmit={handleSubmit}>
+        <div>
+          <input {...title.excludeReset} />
+        </div>
+        <div>
+          <input {...author.excludeReset} />
+        </div>
+        <div>
+          <input {...url.excludeReset} />
+        </div>
+        <button type="submit">Create</button>
+      </form>
+    </>
   )
 }
 
 BlogForm.propTypes = {
-  blogs: PropTypes.array.isRequired,
-  updateBlogs: PropTypes.func.isRequired,
-  updateMessage: PropTypes.func.isRequired,
+  addNotification: PropTypes.func.isRequired,
+  addBlog: PropTypes.func.isRequired,
 }
 
 // redux
 const mapStateToProps = state => {
   // retrieving the state of the notification
   // from store and returning a prop that holds it
+  console.log(state)
   return {
-    notification: state,
+    notification: state.notification,
   }
 }
 
 const mapDispatchToProps = {
   addNotification,
+  addBlog,
 }
 
 // export default BlogForm

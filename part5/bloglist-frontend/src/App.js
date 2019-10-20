@@ -6,22 +6,18 @@ import Notification from './components/Notification'
 import LoginForm from './components/LoginForm'
 import BlogForm from './components/BlogForm'
 import Togglable from './components/Togglable'
+import { connect } from 'react-redux'
 
-// TODO: move message display from here to BlogForm component
+import { initializeBlogs, addLike, removeBlog } from './reducers/blogsReducer'
 
-const App = () => {
+const App = props => {
   const [user, setUser] = useState(null)
   const [blogs, setBlogs] = useState([])
-  const [message, setMessage] = useState(null)
   const [errorMessage, setErrorMessage] = useState(null)
 
   // load up notes
   useEffect(() => {
-    blogsService
-      .getAll() //
-      .then(initialBlogs => {
-        setBlogs(initialBlogs)
-      })
+    props.initializeBlogs()
   }, [])
 
   // check for logged in user
@@ -46,7 +42,7 @@ const App = () => {
 
   const handleLikeUpdate = async id => {
     // get the blog with incremented likes
-    const blog = blogs.find(blog => blog.id === id)
+    const blog = props.blogs.find(blog => blog.id === id)
 
     // create an updated copy
     const updatedBlog = {
@@ -54,13 +50,13 @@ const App = () => {
       likes: blog.likes + 1,
     }
 
-    const returnedBlog = await blogsService.update(id, updatedBlog)
-    setBlogs(blogs.map(blog => (blog.id === id ? returnedBlog : blog)))
+    // update state/UI
+    props.addLike(id, updatedBlog)
   }
 
   const handlePostRemoval = async id => {
     // get blog to be removed
-    const blogToRemove = blogs.find(blog => blog.id === id)
+    const blogToRemove = props.blogs.find(blog => blog.id === id)
 
     // prompt
     const isConfirmed = window.confirm(
@@ -68,17 +64,14 @@ const App = () => {
     )
 
     if (isConfirmed) {
-      await blogsService.remove(id)
-      // update UI
-      setBlogs(blogs.filter(blog => blog.id !== blogToRemove.id))
+      props.removeBlog(id)
     }
   }
 
   const listBlogs = () => {
     // blog with most likes on top
-    const sortedBlogs = blogs.sort((a, b) => b.likes - a.likes)
-
-    return sortedBlogs.map(blog => (
+    // map each one to a component
+    return props.blogs.map(blog => (
       <Blog
         key={blog.id}
         blog={blog}
@@ -108,16 +101,8 @@ const App = () => {
           Logout
         </button>
       </div>
-      <br />
-      <Notification message={message} />
-      <br />
       <Togglable buttonLabel="New Blog" ref={blogFormRef}>
-        <BlogForm
-          blogs={blogs}
-          updateBlogs={setBlogs}
-          message={message}
-          updateMessage={setMessage}
-        />
+        <BlogForm blogs={blogs} updateBlogs={setBlogs} />
       </Togglable>
       <br />
       {listBlogs()}
@@ -125,13 +110,29 @@ const App = () => {
   )
 
   const displayLogin = () => (
-    <>
-      <Notification message={errorMessage} error="true" />
-      <LoginForm setUser={setUser} setError={setErrorMessage} />
-    </>
+    <LoginForm setUser={setUser} setError={setErrorMessage} />
   )
 
   return <>{user ? displayLoggedInInfo() : displayLogin()}</>
 }
 
-export default App
+/* REDUX MAPPINGS*/
+
+const mapDispatchToProps = {
+  // pass action creators to component as props
+  initializeBlogs,
+  addLike,
+  removeBlog,
+}
+
+const mapStateToProps = state => {
+  // get state from redux store and pass to component
+  return {
+    blogs: state.blogs,
+  }
+}
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(App)
