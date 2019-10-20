@@ -1,6 +1,4 @@
 import { useField } from '../hooks/index'
-import loginService from '../services/login'
-import blogsService from '../services/blogs'
 import Notification from '../components/Notification'
 import React from 'react'
 import PropTypes from 'prop-types'
@@ -8,13 +6,14 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { addNotification } from '../reducers/notificationReducer'
 import { flagError, clearError } from '../reducers/errorReducer'
+import { logUserIn } from '../reducers/userReducer'
 
 const LoginForm = ({
-  setUser,
   addNotification,
   flagError,
   clearError,
   error,
+  logUserIn,
 }) => {
   const username = useField('text', 'username')
   const password = useField('password', 'password')
@@ -27,14 +26,7 @@ const LoginForm = ({
 
     try {
       event.preventDefault()
-      const user = await loginService.login({
-        username: username.value,
-        password: password.value,
-      })
-
-      window.localStorage.setItem('loggedBloglistUser', JSON.stringify(user))
-      blogsService.setToken(user.token)
-      setUser(user)
+      logUserIn(username, password)
       resetForm()
       error && clearError()
     } catch (exception) {
@@ -60,6 +52,9 @@ const LoginForm = ({
 
 LoginForm.propTypes = {
   addNotification: PropTypes.func.isRequired,
+  flagError: PropTypes.func.isRequired,
+  clearError: PropTypes.func.isRequired,
+  logUserIn: PropTypes.func.isRequired,
 }
 
 const mapStateToProps = state => {
@@ -75,6 +70,7 @@ const mapDispatchToProps = {
   addNotification,
   flagError,
   clearError,
+  logUserIn,
 }
 
 // export default LoginForm

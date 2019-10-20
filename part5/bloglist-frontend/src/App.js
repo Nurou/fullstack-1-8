@@ -2,19 +2,15 @@ import React, { useState, useEffect } from 'react'
 import './index.css'
 import blogsService from './services/blogs'
 import Blog from './components/Blog'
-import Notification from './components/Notification'
 import LoginForm from './components/LoginForm'
 import BlogForm from './components/BlogForm'
 import Togglable from './components/Togglable'
 import { connect } from 'react-redux'
 
 import { initializeBlogs, addLike, removeBlog } from './reducers/blogsReducer'
+import { initUser, removeUser } from './reducers/userReducer'
 
 const App = props => {
-  const [user, setUser] = useState(null)
-  const [blogs, setBlogs] = useState([])
-  const [errorMessage, setErrorMessage] = useState(null)
-
   // load up notes
   useEffect(() => {
     props.initializeBlogs()
@@ -25,15 +21,17 @@ const App = props => {
     const loggedUserJSON = window.localStorage.getItem('loggedBloglistUser')
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON)
-      setUser(user)
+      props.initUser(user)
       blogsService.setToken(user.token)
     }
   }, [])
 
   const handleLogout = () => {
+    console.log('logging out')
     blogsService.setToken(null)
     window.localStorage.removeItem('loggedBloglistUser')
-    setUser(null)
+    props.removeUser()
+    // setUser(null)
   }
 
   // references
@@ -78,7 +76,7 @@ const App = props => {
         ref={blogRef}
         addLike={() => handleLikeUpdate(blog.id)}
         removePost={() => handlePostRemoval(blog.id)}
-        user={user}
+        user={props.user}
       />
     ))
   }
@@ -94,7 +92,7 @@ const App = props => {
   const displayLoggedInInfo = () => (
     <>
       <h2>Blogs</h2>
-      {capitalizeFirsts(user.name)} is currently logged in
+      {capitalizeFirsts(props.user.name)} is currently logged in
       <div>
         <br />
         <button type="submit" onClick={handleLogout}>
@@ -102,18 +100,17 @@ const App = props => {
         </button>
       </div>
       <Togglable buttonLabel="New Blog" ref={blogFormRef}>
-        <BlogForm blogs={blogs} updateBlogs={setBlogs} />
+        <BlogForm blogs={props.blogs} />
       </Togglable>
       <br />
       {listBlogs()}
     </>
   )
 
-  const displayLogin = () => (
-    <LoginForm setUser={setUser} setError={setErrorMessage} />
-  )
+  // const displayLogin = () => <LoginForm setUser={setUser} />
+  const displayLogin = () => <LoginForm />
 
-  return <>{user ? displayLoggedInInfo() : displayLogin()}</>
+  return <>{props.user ? displayLoggedInInfo() : displayLogin()}</>
 }
 
 /* REDUX MAPPINGS*/
@@ -123,12 +120,15 @@ const mapDispatchToProps = {
   initializeBlogs,
   addLike,
   removeBlog,
+  initUser,
+  removeUser,
 }
 
 const mapStateToProps = state => {
   // get state from redux store and pass to component
   return {
     blogs: state.blogs,
+    user: state.user,
   }
 }
 
