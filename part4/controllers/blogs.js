@@ -4,6 +4,7 @@ const Blog = require('../models/blog')
 const User = require('../models/user')
 const jwt = require('jsonwebtoken')
 
+/* defining request handlers for the router */
 // get blogs
 blogsRouter.get('/', async (request, response, next) => {
   try {

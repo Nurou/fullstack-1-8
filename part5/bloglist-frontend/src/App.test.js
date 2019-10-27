@@ -1,9 +1,4 @@
-/* 
-Write an integration test for your application that verifies that if
- the user is not logged into the application, then the application only displays
-  a login form and no blogs are rendered.
-
-The test can wait for the content of the component to render 
+/*  The test can wait for the content of the component to render 
 with the waitForElement function. */
 import React from 'react'
 import { render, waitForElement } from '@testing-library/react'

@@ -5,12 +5,10 @@ const blogsReducer = (state = [], action) => {
     case `INIT_BLOGS`:
       return action.data.sort((a, b) => b.likes - a.likes)
     case `LIKE`:
-      // setBlogs(blogs.map(blog => (blog.id === id ? returnedBlog : blog)))
-      const updatedBlog = action.data.updatedBlog
-      const id = action.data.id
-      return state
-        .map(blog => (blog.id === id ? updatedBlog : blog))
-        .sort((a, b) => b.likes - a.likes)
+      const likedBlog = action.data.returnedBlog
+      const id = action.data.returnedBlog.id
+      return state.map(blog => (blog.id === id ? likedBlog : blog))
+    // .sort((a, b) => b.likes - a.likes)
     case 'REMOVE':
       return state
         .filter(blog => blog.id !== action.data.id)
@@ -34,14 +32,20 @@ export const initializeBlogs = () => {
 }
 
 /* async dispatch used below as back end is updated*/
-export const addLike = (id, updatedBlog) => {
+export const addLike = likedBlog => {
+  const id = likedBlog.id
+  const updatedBlog = {
+    ...likedBlog,
+    likes: likedBlog.likes + 1,
+  }
+
   return async dispatch => {
     // update like in back-end and return updated blog
-    await blogsService.update(id, updatedBlog)
+    const returnedBlog = await blogsService.update(id, updatedBlog)
     // dispatch the blog with the added like
     dispatch({
       type: 'LIKE',
-      data: { id, updatedBlog },
+      data: { returnedBlog },
     })
   }
 }

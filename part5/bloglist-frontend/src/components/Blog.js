@@ -1,10 +1,11 @@
 import React, { useState, useImperativeHandle } from 'react'
+import { Link } from 'react-router-dom'
 
 const Blog = React.forwardRef(({ blog, addLike, removePost, user }, ref) => {
   const [visible, setVisible] = useState(false)
 
-  let currentUser = user.name
-  let blogsCreator = blog.user.name
+  let currentUser = user && user.name
+  let blogsCreator = user && blog.user.name
 
   const displayWhenVisible = { display: visible ? '' : 'none' }
   const displayButton = {
@@ -44,7 +45,7 @@ const Blog = React.forwardRef(({ blog, addLike, removePost, user }, ref) => {
     <div className="blogContainer">
       <div onClick={toggleVisibility} style={blogStyle} className="defaultInfo">
         <strong>
-          {blog.title} {blog.author}
+          {blog.title} by <em>{blog.author}</em>
         </strong>
       </div>
 
@@ -59,9 +60,6 @@ const Blog = React.forwardRef(({ blog, addLike, removePost, user }, ref) => {
           <br />
           Post added by: {blog.user.name}
           <br />
-          {/* <button onClick={removePost} style={displayButton}>
-            Remove
-          </button> */}
           {user && currentUser === blogsCreator && removalButton()}
         </div>
       </div>

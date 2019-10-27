@@ -1,116 +1,83 @@
-import React, { useState, useEffect } from 'react'
 import './index.css'
+import React, { useEffect } from 'react'
 import blogsService from './services/blogs'
+
 import Blog from './components/Blog'
 import LoginForm from './components/LoginForm'
-import BlogForm from './components/BlogForm'
-import Togglable from './components/Togglable'
+import Users from './components/Users'
+import User from './components/User'
+import Navbar from './components/Navbar'
+import BlogList from './components/BlogList'
+import BlogInfo from './components/BlogInfo'
+import Footer from './components/Footer'
+
 import { connect } from 'react-redux'
 
 import { initializeBlogs, addLike, removeBlog } from './reducers/blogsReducer'
 import { initUser, removeUser } from './reducers/userReducer'
+import { initializeUsers } from './reducers/creatorsReducer'
+
+import { BrowserRouter as Router, Route, Redirect } from 'react-router-dom'
 
 const App = props => {
-  // load up notes
+  /* SIDE-EFFECTS */
   useEffect(() => {
     props.initializeBlogs()
-  }, [])
-
-  // check for logged in user
-  useEffect(() => {
-    const loggedUserJSON = window.localStorage.getItem('loggedBloglistUser')
-    if (loggedUserJSON) {
-      const user = JSON.parse(loggedUserJSON)
-      props.initUser(user)
-      blogsService.setToken(user.token)
-    }
+    props.initUser()
+    props.initializeUsers()
   }, [])
 
   const handleLogout = () => {
-    console.log('logging out')
     blogsService.setToken(null)
     window.localStorage.removeItem('loggedBloglistUser')
     props.removeUser()
-    // setUser(null)
   }
 
-  // references
-  const blogRef = React.createRef()
-  const blogFormRef = React.createRef()
+  // matches for parametrized routes
+  const userById = id => props.users.find(user => user.id === id)
+  const blogById = id => props.blogs.find(blog => blog.id === id)
 
-  const handleLikeUpdate = async id => {
-    // get the blog with incremented likes
-    const blog = props.blogs.find(blog => blog.id === id)
-
-    // create an updated copy
-    const updatedBlog = {
-      ...blog,
-      likes: blog.likes + 1,
-    }
-
-    // update state/UI
-    props.addLike(id, updatedBlog)
-  }
-
-  const handlePostRemoval = async id => {
-    // get blog to be removed
-    const blogToRemove = props.blogs.find(blog => blog.id === id)
-
-    // prompt
-    const isConfirmed = window.confirm(
-      `Remove blog ${blogToRemove.title} by ${blogToRemove.author} ?`,
-    )
-
-    if (isConfirmed) {
-      props.removeBlog(id)
-    }
-  }
-
-  const listBlogs = () => {
-    // blog with most likes on top
-    // map each one to a component
-    return props.blogs.map(blog => (
-      <Blog
-        key={blog.id}
-        blog={blog}
-        ref={blogRef}
-        addLike={() => handleLikeUpdate(blog.id)}
-        removePost={() => handlePostRemoval(blog.id)}
-        user={props.user}
-      />
-    ))
-  }
-
-  const capitalizeFirsts = text => {
-    return text
-      .toLowerCase()
-      .split(' ')
-      .map(s => s.charAt(0).toUpperCase() + s.substring(1))
-      .join(' ')
-  }
-
-  const displayLoggedInInfo = () => (
+  return (
     <>
-      <h2>Blogs</h2>
-      {capitalizeFirsts(props.user.name)} is currently logged in
-      <div>
-        <br />
-        <button type="submit" onClick={handleLogout}>
-          Logout
-        </button>
-      </div>
-      <Togglable buttonLabel="New Blog" ref={blogFormRef}>
-        <BlogForm blogs={props.blogs} />
-      </Togglable>
-      <br />
-      {listBlogs()}
+      <Router>
+        {props.user && <Navbar logout={handleLogout} />}
+        <Route
+          exact
+          path="/"
+          render={() => (props.user ? <BlogList /> : <LoginForm />)}
+        />
+        <Route exact path="/users" render={() => <Users />} />
+        <Route exact path="/login" render={() => <LoginForm />} />
+        <Route exact path="/blogs" render={() => <Redirect to="/" />} />
+
+        <Route
+          exact
+          path="/users/:id"
+          render={({ match }) => {
+            const userMatch = userById(match.params.id)
+            if (!userMatch) {
+              return <Redirect to="/users" />
+            }
+            return <User user={userMatch} />
+          }}
+        />
+
+        <Route
+          exact
+          path="/blogs/:id"
+          render={({ match }) => {
+            const blogMatch = blogById(match.params.id)
+            if (!blogMatch) {
+              return <Redirect to="/blogs" />
+            }
+            // return <Blog blog={blogMatch} />
+            return <BlogInfo match={blogMatch} />
+          }}
+        />
+      </Router>
+      <Footer />
     </>
   )
-
-  // const displayLogin = () => <LoginForm setUser={setUser} />
-  const displayLogin = () => <LoginForm />
-
-  return <>{props.user ? displayLoggedInInfo() : displayLogin()}</>
 }
 
 /* REDUX MAPPINGS*/
@@ -122,6 +89,7 @@ const mapDispatchToProps = {
   removeBlog,
   initUser,
   removeUser,
+  initializeUsers,
 }
 
 const mapStateToProps = state => {
@@ -129,9 +97,12 @@ const mapStateToProps = state => {
   return {
     blogs: state.blogs,
     user: state.user,
+    users: state.users,
   }
 }
 
+// inject state and action creators
+// into component
 export default connect(
   mapStateToProps,
   mapDispatchToProps,

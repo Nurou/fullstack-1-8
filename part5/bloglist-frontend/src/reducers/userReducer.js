@@ -15,17 +15,32 @@ const reducer = (state = null, action) => {
 }
 
 /* ACTION CREATORS */
-export const initUser = user => {
-  return {
-    type: 'INIT_USER',
-    data: { user },
+// export const initUser = user => {
+//   return {
+//     type: 'INIT_USER',
+//     data: { user },
+//   }
+// }
+export const initUser = () => {
+  return async dispatch => {
+    const loggedUserJSON = window.localStorage.getItem('loggedBloglistUser')
+    if (loggedUserJSON) {
+      const user = JSON.parse(loggedUserJSON)
+      blogsService.setToken(user.token)
+      dispatch({
+        type: 'INIT_USER',
+        data: { user },
+      })
+    }
   }
 }
+
 export const removeUser = () => {
   return {
     type: 'REMOVE_USER',
   }
 }
+
 export const logUserIn = (username, password) => {
   return async dispatch => {
     const user = await loginService.login({
