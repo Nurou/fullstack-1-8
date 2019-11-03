@@ -1,5 +1,4 @@
 import React, { useState, useImperativeHandle } from 'react'
-import { Link } from 'react-router-dom'
 
 const Blog = React.forwardRef(({ blog, addLike, removePost, user }, ref) => {
   const [visible, setVisible] = useState(false)

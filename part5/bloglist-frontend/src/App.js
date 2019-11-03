@@ -2,7 +2,6 @@ import './index.css'
 import React, { useEffect } from 'react'
 import blogsService from './services/blogs'
 
-import Blog from './components/Blog'
 import LoginForm from './components/LoginForm'
 import Users from './components/Users'
 import User from './components/User'
@@ -40,7 +39,9 @@ const App = props => {
   return (
     <>
       <Router>
+        {/* always displayed */}
         {props.user && <Navbar logout={handleLogout} />}
+        {/* home renders either login or bloglist (if logged in) */}
         <Route
           exact
           path="/"
@@ -70,7 +71,6 @@ const App = props => {
             if (!blogMatch) {
               return <Redirect to="/blogs" />
             }
-            // return <Blog blog={blogMatch} />
             return <BlogInfo match={blogMatch} />
           }}
         />

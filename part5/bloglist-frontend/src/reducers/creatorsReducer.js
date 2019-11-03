@@ -12,7 +12,6 @@ const creatorsReducer = (state = [], action) => {
 export const initializeUsers = () => {
   return async dispatch => {
     const users = await usersService.getAll()
-    console.log(users)
     dispatch({
       type: 'INIT_USERS',
       data: users,

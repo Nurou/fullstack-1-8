@@ -1,6 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { addLike, removeBlog } from '../reducers/blogsReducer'
+import CommentForm from '../components/CommentForm'
 
 const BlogInfo = ({ match, removeBlog, user, addLike }) => {
   const handlePostRemoval = async () => {
@@ -14,6 +15,14 @@ const BlogInfo = ({ match, removeBlog, user, addLike }) => {
     }
   }
 
+  const displayComments = () => (
+    <ul>
+      {match.comments.map(comment => {
+        return <li key={comment.id}>{comment.content}</li>
+      })}
+    </ul>
+  )
+
   return (
     <div>
       <h1>
@@ -23,7 +32,7 @@ const BlogInfo = ({ match, removeBlog, user, addLike }) => {
       <div>
         <div>
           <br />
-          <a href={match.url} target="_blank">
+          <a href={match.url} target="_blank" rel="noopener noreferrer">
             Read Post
           </a>
           <br />
@@ -36,6 +45,9 @@ const BlogInfo = ({ match, removeBlog, user, addLike }) => {
             <button onClick={handlePostRemoval}>Remove</button>
           )}
         </div>
+        <h2>Comments</h2>
+        <CommentForm blog={match} />
+        {match.comments && displayComments()}
       </div>
     </div>
   )
@@ -44,6 +56,7 @@ const BlogInfo = ({ match, removeBlog, user, addLike }) => {
 const mapStateToProps = state => {
   return {
     user: state.user,
+    // blogs: state.blogs
   }
 }
 

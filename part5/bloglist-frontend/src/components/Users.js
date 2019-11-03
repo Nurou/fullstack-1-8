@@ -24,7 +24,8 @@ const columns = [
 const Users = props => {
   const data = []
   // populate table
-  props.users.map(user => {
+
+  props.users.forEach(user => {
     data.push({
       name: <Link to={`/users/${user.id}`}>{user.name}</Link>,
       username: user.username,

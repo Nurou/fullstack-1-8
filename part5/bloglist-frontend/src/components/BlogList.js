@@ -44,36 +44,8 @@ const StyledList = styled.ul`
 
 const BlogList = props => {
   // references
-  const blogRef = React.createRef()
+  // const blogRef = React.createRef()
   const blogFormRef = React.createRef()
-
-  const handleLikeUpdate = async id => {
-    // get the blog with incremented likes
-    const blog = props.blogs.find(blog => blog.id === id)
-
-    // create an updated copy
-    const updatedBlog = {
-      ...blog,
-      likes: blog.likes + 1,
-    }
-
-    // update state/UI
-    props.addLike(id, updatedBlog)
-  }
-
-  const handlePostRemoval = async id => {
-    // get blog to be removed
-    const blogToRemove = props.blogs.find(blog => blog.id === id)
-
-    // prompt
-    const isConfirmed = window.confirm(
-      `Remove blog ${blogToRemove.title} by ${blogToRemove.author} ?`,
-    )
-
-    if (isConfirmed) {
-      props.removeBlog(id)
-    }
-  }
 
   // map each one to a component
   return (

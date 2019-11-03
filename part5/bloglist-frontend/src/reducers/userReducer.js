@@ -15,12 +15,7 @@ const reducer = (state = null, action) => {
 }
 
 /* ACTION CREATORS */
-// export const initUser = user => {
-//   return {
-//     type: 'INIT_USER',
-//     data: { user },
-//   }
-// }
+
 export const initUser = () => {
   return async dispatch => {
     const loggedUserJSON = window.localStorage.getItem('loggedBloglistUser')
