@@ -9,6 +9,10 @@ const StyledFooter = styled.div`
   width: 100%;
   text-align: center;
   font-size: 1.5rem;
+  background-color: #999da8;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(19rem, 1fr));
+  grid-gap: 1rem;
 `
 
 const Footer = () => {

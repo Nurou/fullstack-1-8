@@ -10,6 +10,10 @@ import styled from 'styled-components'
 const StyledLink = styled(Link)`
   text-decoration: none;
 
+  &:hover {
+    transform: translateY(-10px);
+  }
+
   &:focus,
   &:hover,
   &:visited,
@@ -33,13 +37,12 @@ const StyledLink = styled(Link)`
 
 const StyledList = styled.ul`
   list-style-type: none;
-  display: Flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
   margin: 10px;
   padding: 15px;
+
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(19rem, 1fr));
+  grid-gap: 1rem;
 `
 
 const BlogList = props => {

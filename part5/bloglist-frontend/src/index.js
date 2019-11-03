@@ -30,6 +30,7 @@ const GlobalStyles = createGlobalStyle`
     strong {
       font-weight: bold;
     }
+
   }
 `
 

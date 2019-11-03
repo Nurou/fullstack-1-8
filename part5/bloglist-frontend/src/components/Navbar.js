@@ -10,18 +10,20 @@ import styled from 'styled-components'
 const StyledNav = styled.div`
   background-color: #9ea3a0;
   height: 3rem;
-  display: Flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
   margin: 15px;
   padding: 20px;
   border-radius: 10px;
   box-shadow: 7px 7px 2px 1px #858285;
 
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(19rem, 1fr));
+  grid-gap: 1rem;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+
   a {
-    padding: 15px;
+    padding: 50px;
     font-size: 1.3rem;
     text-decoration: none;
     color: #191a1a;
