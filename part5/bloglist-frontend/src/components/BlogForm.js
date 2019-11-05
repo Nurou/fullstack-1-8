@@ -43,15 +43,17 @@ const BlogForm = ({ addNotification, addBlog }) => {
       <Notification />
       <form onSubmit={handleSubmit}>
         <div>
-          <input {...title.excludeReset} />
+          <input id="title" {...title.excludeReset} />
         </div>
         <div>
-          <input {...author.excludeReset} />
+          <input id="author" {...author.excludeReset} />
         </div>
         <div>
-          <input {...url.excludeReset} />
+          <input id="url" {...url.excludeReset} />
         </div>
-        <button type="submit">Create</button>
+        <button type="submit" data-cy="create">
+          Create
+        </button>
       </form>
     </>
   )

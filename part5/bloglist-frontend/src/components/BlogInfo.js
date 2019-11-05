@@ -37,12 +37,16 @@ const BlogInfo = ({ match, removeBlog, user, addLike }) => {
           </a>
           <br />
           Popularity: {match.likes} likes{' '}
-          <button onClick={() => addLike(match)}>Like</button>
+          <button data-cy="btn-like" onClick={() => addLike(match)}>
+            Like
+          </button>
           <br /> {/*  */}
           Post added here by: {match.user.name}
           <br />
           {match.user && user.name === match.user.name && (
-            <button onClick={handlePostRemoval}>Remove</button>
+            <button data-cy="btn-remove" onClick={handlePostRemoval}>
+              Remove
+            </button>
           )}
         </div>
         <h2>Comments</h2>

@@ -44,7 +44,9 @@ const LoginForm = ({
           <input {...username.excludeReset} />
           <input {...password.excludeReset} />
         </div>
-        <button type="submit">Login</button>
+        <button type="submit" data-cy="submit">
+          Login
+        </button>
       </form>
     </div>
   )

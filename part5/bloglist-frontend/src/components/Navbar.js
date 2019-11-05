@@ -87,7 +87,7 @@ const Navbar = props => {
           Users
         </Link>
         - <strong>{capitalizeFirsts(props.user.name)}</strong> logged in{' '}
-        <button type="submit" onClick={props.handleLogout}>
+        <button data-cy="btn-logout" type="submit" onClick={props.logout}>
           Logout
         </button>
       </div>{' '}

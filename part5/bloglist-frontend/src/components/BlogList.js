@@ -5,6 +5,8 @@ import Togglable from '../components/Togglable'
 import BlogForm from '../components/BlogForm'
 import { Link } from 'react-router-dom'
 
+// import img from '../../../../assets/yellow-brushstroke.png'
+
 import styled from 'styled-components'
 
 const StyledLink = styled(Link)`
@@ -61,7 +63,7 @@ const BlogList = props => {
       <StyledList>
         {props.blogs.map(blog => (
           <li key={blog.id}>
-            <StyledLink to={`/blogs/${blog.id}`}>
+            <StyledLink data-cy="post" to={`/blogs/${blog.id}`}>
               "{blog.title}" by <em>{blog.author}</em>
             </StyledLink>
           </li>
