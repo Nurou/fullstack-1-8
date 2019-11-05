@@ -17,13 +17,16 @@ const StyledNav = styled.div`
 
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(19rem, 1fr));
-  grid-gap: 1rem;
-  justify-content: center;
+  grid-gap: 2rem;
+  // justify-content: center;
   align-items: center;
   text-align: center;
 
+  div {
+    margin: -20px;
+  }
+
   a {
-    padding: 50px;
     font-size: 1.3rem;
     text-decoration: none;
     color: #191a1a;

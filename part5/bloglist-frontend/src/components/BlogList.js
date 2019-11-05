@@ -5,8 +5,6 @@ import Togglable from '../components/Togglable'
 import BlogForm from '../components/BlogForm'
 import { Link } from 'react-router-dom'
 
-// import img from '../../../../assets/yellow-brushstroke.png'
-
 import styled from 'styled-components'
 
 const StyledLink = styled(Link)`
