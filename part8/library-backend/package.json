@@ -1,0 +1,16 @@
+{
+  "name": "library-backend",
+  "version": "1.0.0",
+  "description": "part8",
+  "main": "library-backend.js",
+  "scripts": {
+    "watch": "nodemon library-backend"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "apollo-server": "^2.9.12",
+    "graphql": "^14.5.8",
+    "nodemon": "^2.0.1"
+  }
+}
