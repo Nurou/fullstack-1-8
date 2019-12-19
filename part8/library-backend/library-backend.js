@@ -1,5 +1,6 @@
 const { ApolloServer, gql, UserInputError } = require('apollo-server')
 const uuid = require('uuid')
+const _ = require('lodash')
 
 let authors = [
   {
@@ -96,7 +97,7 @@ const typeDefs = gql`
   type Author {
     name: String!
     id: String!
-    bookCount: Int!
+    bookCount: Int
     born: Int
   }
 
@@ -147,19 +148,18 @@ const resolvers = {
 
       return books
     },
+    // allAuthors: () =>
+    //   authors.map(author => ({
+    //     ...author,
+    //     bookCount: books.filter(book => book.author === author.name).length
+    //   }))
     allAuthors: () => {
-      authorsWithBookCount = [...authors].map(author => ({
-        ...author,
-        bookCount: 0
+      booksByAuthor = _.groupBy(books, b => b.author)
+      return authors.map(a => ({
+        name: a.name,
+        born: a.born,
+        bookCount: booksByAuthor[a.name].length
       }))
-
-      books.forEach(book => {
-        authorsWithBookCount.map(author =>
-          author.name === book.author ? author.bookCount++ : author
-        )
-      })
-
-      return authorsWithBookCount
     }
   },
   Mutation: {
@@ -171,18 +171,29 @@ const resolvers = {
       }
 
       const book = { ...args, id: uuid() }
-      const author = book.author
-      if (!authors.find(author => author.name === author)) {
-        authors.push({ name: author, born: null, id: uuid() })
+
+      // check for author
+      const authorFound = authors.find(author => author.name === book.author)
+      console.log('TCL: authorFound', authorFound)
+
+      // new author?
+      if (!authorFound) {
+        const newAuthor = {
+          name: book.author,
+          born: null,
+          id: uuid(),
+          bookCount: 1
+        }
+        authors.push(newAuthor)
       }
+
+      books.push(book)
       return book
     },
     editAuthor: (root, args) => {
       const author = authors.find(author => author.name === args.name)
+      // TODO: refactor to throw error
       if (!author) {
-        // throw new UserInputError('Author does not exist!', {
-        //   invalidArgs: args.name
-        // })
         return null
       }
       const updatedAuthor = { ...author, born: args.setBornTo }
