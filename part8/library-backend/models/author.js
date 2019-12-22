@@ -8,7 +8,9 @@ const schema = new mongoose.Schema({
     minlength: 4
   },
   born: {
-    type: Number
+    type: Number,
+    minlength: 4,
+    maxlength: 4
   }
 })
 

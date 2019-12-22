@@ -90,30 +90,6 @@ const resolvers = {
     allAuthors: async () => {
       const authors = await Author.find({})
       const books = await Book.find({})
-      // spits out an array of objects with an id and count, with the id being the author's id
-      // const authorIds = authors.map(a => a._id)
-      // const authorBookCounts = await Book.aggregate([
-      //   {
-      //     /* $match is a filter */
-      //     $match: {
-      //       author: {
-      //         // if they're strings instead of objectids, this will break:
-      //         $in: authorIds
-      //       }
-      //     }
-      //   },
-      //   {
-      //     /* how we want to group the information together */
-      //     $group: {
-      //       // _id field has to be unique - we choose a field from the object
-      //       _id: '$author',
-      //       // counts the number of entries in the book collection
-      //       // that have the same author
-      //       count: { $sum: 1 }
-      //     }
-      //   }
-      // ])
-
       return authors.map(a => ({
         name: a.name,
         born: a.born,
@@ -124,6 +100,7 @@ const resolvers = {
   },
   Mutation: {
     addBook: async (root, args) => {
+      // short book titles
       const bookExists = await Book.findOne({ title: args.title })
       if (bookExists) {
         throw new UserInputError('Name must be unique', {
@@ -143,17 +120,25 @@ const resolvers = {
 
       return book
     },
-    editAuthor: (root, args) => {
-      const author = authors.find(author => author.name === args.name)
-      // TODO: refactor to throw error
-      if (!author) {
-        return null
+    editAuthor: async (root, args) => {
+      if (!args.name || !args.setBornTo) {
+        throw new UserInputError('arguments missing', {
+          invalidArgs: args
+        })
       }
-      const updatedAuthor = { ...author, born: args.setBornTo }
-      authors = authors.map(author =>
-        author.name === args.name ? updatedAuthor : author
+      const author = await Author.findOneAndUpdate(
+        { name: args.name },
+        { $set: { born: args.setBornTo } },
+        { new: true },
+        err => {
+          if (err) {
+            throw new UserInputError(error.message, {
+              invalidArgs: args
+            })
+          }
+        }
       )
-      return updatedAuthor
+      return author
     }
   }
 }

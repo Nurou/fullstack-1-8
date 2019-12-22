@@ -8,7 +8,8 @@ const schema = new mongoose.Schema({
     minlength: 2
   },
   published: {
-    type: Number
+    type: Number,
+    maxlength: 40
   },
   author: {
     type: mongoose.Schema.Types.ObjectId,
