@@ -86,23 +86,34 @@ const resolvers = {
       const genreProvided = args.genre
       const authorProvided = args.author
 
-      const books = await Book.find({})
+      // db queries
+      const books = await Book.find({}).populate('author')
 
-      const filteredByGenre = books.filter(book =>
-        book.genres.includes(args.genre)
-      )
-      const filteredByAuthor = books.filter(
-        book => book.author === authorProvided
-      )
-      const filteredByAuthorAndGenre = books.filter(
-        book =>
-          book.author === authorProvided && book.genres.includes(genreProvided)
-      )
-      // TODO: deal with queries with args
-      if (genreProvided && !authorProvided) return filteredByGenre
-      // if (!genreProvided && authorProvided) return filteredByAuthor
-      // if (genreProvided && authorProvided) return filteredByAuthorAndGenre
+      if (authorProvided) {
+        const author = await Author.findOne({ name: authorProvided })
+        console.log('TCL: author', author)
 
+        // author & genre ✔
+        if (genreProvided) {
+          return books.filter(
+            book =>
+              book.author.name === authorProvided &&
+              book.genres.includes(genreProvided)
+          )
+        }
+        books.forEach(book => {
+          console.log(book)
+        })
+
+        // only author ✔
+        return books.filter(book => book.author.name === authorProvided)
+      }
+
+      // only genre ✔
+      if (genreProvided)
+        return books.filter(book => book.genres.includes(args.genre))
+
+      // no filter ✔
       return books
     },
     allAuthors: async () => {
