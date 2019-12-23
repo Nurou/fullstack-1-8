@@ -1,9 +1,19 @@
-const { ApolloServer, gql, UserInputError } = require('apollo-server')
+const {
+  ApolloServer,
+  gql,
+  UserInputError,
+  AuthenticationError
+} = require('apollo-server')
 const _ = require('lodash')
 const mongoose = require('mongoose')
+const jwt = require('jsonwebtoken')
 
+// models
 const Book = require('./models/book')
 const Author = require('./models/author')
+const User = require('./models/user')
+
+const JWT_SECRET = 'NEED_HERE_A_SECRET_KEY'
 
 mongoose.set('useFindAndModify', false)
 
@@ -36,11 +46,22 @@ const typeDefs = gql`
     born: Int
   }
 
+  type User {
+    username: String!
+    favoriteGenre: String!
+    id: ID!
+  }
+
+  type Token {
+    value: String!
+  }
+
   type Query {
     bookCount: Int!
     authorCount: Int!
     allBooks(author: String, genre: String): [Book!]!
     allAuthors: [Author!]!
+    me: User
   }
 
   type Mutation {
@@ -52,6 +73,8 @@ const typeDefs = gql`
       genres: [String!]!
     ): Book
     editAuthor(name: String!, setBornTo: Int!): Author
+    createUser(username: String!, favoriteGenre: String!): User
+    login(username: String!, password: String!): Token
   }
 `
 
@@ -76,17 +99,12 @@ const resolvers = {
           book.author === authorProvided && book.genres.includes(genreProvided)
       )
       // TODO: deal with queries with args
-      // if (genreProvided && !authorProvided) return filteredByGenre
+      if (genreProvided && !authorProvided) return filteredByGenre
       // if (!genreProvided && authorProvided) return filteredByAuthor
       // if (genreProvided && authorProvided) return filteredByAuthorAndGenre
 
       return books
     },
-    // allAuthors: () =>
-    //   authors.map(author => ({
-    //     ...author,
-    //     bookCount: books.filter(book => book.author === author.name).length
-    //   }))
     allAuthors: async () => {
       const authors = await Author.find({})
       const books = await Book.find({})
@@ -96,10 +114,18 @@ const resolvers = {
         bookCount: books.filter(b => b.author.toString() === a._id.toString())
           .length
       }))
+    },
+    me: (root, args, context) => {
+      console.log(context.currentUser)
+      return context.currentUser
     }
   },
   Mutation: {
-    addBook: async (root, args) => {
+    addBook: async (root, args, { currentUser }) => {
+      if (!currentUser) {
+        throw new AuthenticationError('not authenticated')
+      }
+
       // short book titles
       const bookExists = await Book.findOne({ title: args.title })
       if (bookExists) {
@@ -120,7 +146,10 @@ const resolvers = {
 
       return book
     },
-    editAuthor: async (root, args) => {
+    editAuthor: async (root, args, { currentUser }) => {
+      if (!currentUser) {
+        throw new AuthenticationError('not authenticated')
+      }
       if (!args.name || !args.setBornTo) {
         throw new UserInputError('arguments missing', {
           invalidArgs: args
@@ -139,13 +168,45 @@ const resolvers = {
         }
       )
       return author
+    },
+    createUser: (root, args) => {
+      const user = new User({ ...args })
+      return user.save().catch(error => {
+        throw new UserInputError(error.message, {
+          invalidArgs: args
+        })
+      })
+    },
+    login: async (root, args) => {
+      const user = await User.findOne({ username: args.username })
+
+      if (!user || args.password !== 'secred') {
+        throw new UserInputError('wrong credentials')
+      }
+
+      const userForToken = {
+        username: user.username,
+        id: user._id
+      }
+
+      // return jwt token if user-pass pair matches
+      return { value: jwt.sign(userForToken, JWT_SECRET) }
     }
   }
 }
 
 const server = new ApolloServer({
   typeDefs,
-  resolvers
+  resolvers,
+  context: async ({ req }) => {
+    // is there a token?
+    const auth = req ? req.headers.authorization : null
+    if (auth && auth.toLowerCase().startsWith('bearer ')) {
+      const decodedToken = jwt.verify(auth.substring(7), JWT_SECRET)
+      const currentUser = await User.findById(decodedToken.id)
+      return { currentUser }
+    }
+  }
 })
 
 server.listen().then(({ url }) => {
