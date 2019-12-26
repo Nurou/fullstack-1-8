@@ -88,6 +88,7 @@ const resolvers = {
 
       // db queries
       const books = await Book.find({}).populate('author')
+      console.log(books)
 
       if (authorProvided) {
         const author = await Author.findOne({ name: authorProvided })
@@ -127,7 +128,6 @@ const resolvers = {
       }))
     },
     me: (root, args, context) => {
-      console.log(context.currentUser)
       return context.currentUser
     }
   },
@@ -145,17 +145,31 @@ const resolvers = {
         })
       }
 
+      // copy the book
       const book = new Book({ ...args })
 
-      try {
-        await book.save()
-      } catch (error) {
+      // check if the author is in db
+      const authorExists = await Author.findOne({ name: args.author })
+
+      if (!authorExists) {
+        // create author and save them in db
+        const author = new Author({ name: args.author })
+        const returnedAuthor = await author.save()
+        // now we have the authors id
+        // we can save the book along with the author id
+        console.log(`returned author: ${returnedAuthor}`)
+        book.author = returnedAuthor._id
+      } else {
+        book.author = authorExists._id
+      }
+
+      const savedBook = await book.save().catch(error => {
         throw new UserInputError(error.message, {
           invalidArgs: args
         })
-      }
+      })
 
-      return book
+      return savedBook.populate('author').execPopulate()
     },
     editAuthor: async (root, args, { currentUser }) => {
       if (!currentUser) {
@@ -181,7 +195,8 @@ const resolvers = {
       return author
     },
     createUser: (root, args) => {
-      const user = new User({ ...args })
+      const user = new User({ username: args.username })
+
       return user.save().catch(error => {
         throw new UserInputError(error.message, {
           invalidArgs: args
@@ -192,7 +207,7 @@ const resolvers = {
       const user = await User.findOne({ username: args.username })
 
       if (!user || args.password !== 'secred') {
-        throw new UserInputError('wrong credentials')
+        throw new UserInputError('Wrong Credentials')
       }
 
       const userForToken = {
