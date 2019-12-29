@@ -15,21 +15,6 @@ const NewBook = props => {
 
   const [addBook] = useMutation(CREATE_BOOK, {
     onError: handleError,
-    // update: (store, response) => {
-    //   // reads cached state of ALL_BOOKS
-    //   const booksInStore = store.readQuery([{ query: ALL_BOOKS }])
-    //   console.log('TCL: bookDataInStore', booksInStore)
-    //   booksInStore.AllBooks.push(response.data.addBook)
-    //   // update cache
-    //   store.writeQuery({
-    //     query: ALL_BOOKS,
-    //     data: booksInStore
-    //   })
-    //   // reads cached state of ALL_AUTHORS
-    //   const authorsInStore = store.readQuery([{ query: ALL_AUTHORS }])
-    //   console.log('TCL: bookDataInStore', authorsInStore)
-    //   console.groupEnd(response.data.addBook)
-    // }
     refetchQueries: [{ query: ALL_BOOKS }, { query: ALL_AUTHORS }]
   })
 
@@ -43,23 +28,17 @@ const NewBook = props => {
     return null
   }
 
-  /**
-   * Book validation failed: author:
-   * Cast to ObjectID failed for value
-   *  "d32" at path "author"
-   */
-
   const submit = async e => {
     e.preventDefault()
     await addBook({
       variables: { title, author, published, genres }
     })
 
-    // setTitle('')
-    // setPublished('')
-    // setAuthor('')
-    // setGenres([])
-    // setGenre('')
+    setTitle('')
+    setPublished('')
+    setAuthor('')
+    setGenres([])
+    setGenre('')
   }
 
   const addGenre = () => {

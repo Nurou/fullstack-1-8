@@ -37,7 +37,6 @@ const LoginForm = props => {
     })
 
     if (result) {
-      console.log('Login successful')
       const token = result.data.login.value
       props.setToken(token)
       localStorage.setItem('booklist-user-token', token)

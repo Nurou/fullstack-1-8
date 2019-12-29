@@ -4,15 +4,10 @@ import Authors from './components/Authors'
 import Books from './components/Books'
 import NewBook from './components/NewBook'
 import LoginView from './components/LoginView'
+import { Recommend } from './components/Recommend'
 
 const App = () => {
   const client = useApolloClient()
-  console.log(client)
-  /**
-   * State:
-   * 1. current page
-   * 2. login state
-   */
   const [page, setPage] = useState('authors')
   const [token, setToken] = useState(
     localStorage.getItem('booklist-user-token')
@@ -42,6 +37,12 @@ const App = () => {
           onClick={() => setPage('add')}
         >
           add book
+        </button>
+        <button
+          className=' flex-1 bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded m-2'
+          onClick={() => setPage('recommend')}
+        >
+          recommend
         </button>
         <button
           className=' flex-1 bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded m-2'
@@ -77,6 +78,8 @@ const App = () => {
       <Books show={page === 'books'} />
 
       <NewBook show={page === 'add'} />
+
+      <Recommend show={page === 'recommend'} />
 
       <LoginView
         show={page === 'login'}

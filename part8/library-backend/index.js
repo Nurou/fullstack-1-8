@@ -88,11 +88,9 @@ const resolvers = {
 
       // db queries
       const books = await Book.find({}).populate('author')
-      console.log(books)
 
       if (authorProvided) {
         const author = await Author.findOne({ name: authorProvided })
-        console.log('TCL: author', author)
 
         // author & genre ✔
         if (genreProvided) {
@@ -102,9 +100,6 @@ const resolvers = {
               book.genres.includes(genreProvided)
           )
         }
-        books.forEach(book => {
-          console.log(book)
-        })
 
         // only author ✔
         return books.filter(book => book.author.name === authorProvided)
@@ -225,11 +220,13 @@ const server = new ApolloServer({
   typeDefs,
   resolvers,
   context: async ({ req }) => {
-    // is there a token?
+    // is there a request? if yes, get token
     const auth = req ? req.headers.authorization : null
+    // if token is of valid format, decode it & find user by it
     if (auth && auth.toLowerCase().startsWith('bearer ')) {
       const decodedToken = jwt.verify(auth.substring(7), JWT_SECRET)
       const currentUser = await User.findById(decodedToken.id)
+      // currentUser now accessible in resolvers through context
       return { currentUser }
     }
   }

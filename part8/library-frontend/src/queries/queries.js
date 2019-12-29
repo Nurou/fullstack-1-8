@@ -22,6 +22,15 @@ export const ALL_BOOKS = gql`
     }
   }
 `
+export const CURRENT_USER = gql`
+  {
+    me {
+      username
+      id
+      favoriteGenre
+    }
+  }
+`
 
 export const CREATE_BOOK = gql`
   mutation createBook(

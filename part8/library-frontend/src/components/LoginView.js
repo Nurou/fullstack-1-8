@@ -5,6 +5,7 @@ export const LoginView = props => {
   if (!props.show) {
     return null
   }
+
   return (
     <div className='flex justify-center'>
       <LoginForm
