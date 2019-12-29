@@ -1,5 +1,23 @@
 import { gql } from 'apollo-boost'
 
+/**
+ * Fragments
+ */
+const BookDetailsFragment = gql`
+  fragment BookDetails on Book {
+    title
+    author {
+      name
+      born
+    }
+    published
+    genres
+  }
+`
+
+/**
+ * Queries
+ */
 export const ALL_AUTHORS = gql`
   {
     allAuthors {
@@ -10,15 +28,10 @@ export const ALL_AUTHORS = gql`
   }
 `
 export const ALL_BOOKS = gql`
+  ${BookDetailsFragment}
   {
     allBooks {
-      title
-      author {
-        name
-        born
-      }
-      published
-      genres
+      ...BookDetails
     }
   }
 `
@@ -33,6 +46,7 @@ export const CURRENT_USER = gql`
 `
 
 export const CREATE_BOOK = gql`
+  ${BookDetailsFragment}
   mutation createBook(
     $title: String!
     $author: String!
@@ -45,13 +59,7 @@ export const CREATE_BOOK = gql`
       published: $published
       genres: $genres
     ) {
-      title
-      author {
-        name
-        born
-      }
-      published
-      genres
+      ...BookDetails
     }
   }
 `

@@ -2,7 +2,8 @@ const {
   ApolloServer,
   gql,
   UserInputError,
-  AuthenticationError
+  AuthenticationError,
+  PubSub
 } = require('apollo-server')
 const _ = require('lodash')
 const mongoose = require('mongoose')
@@ -15,6 +16,14 @@ const User = require('./models/user')
 
 const JWT_SECRET = 'NEED_HERE_A_SECRET_KEY'
 
+/**
+ * Docs: PubSub is a class that exposes a simple publish and subscribe API.
+ */
+const pubsub = new PubSub()
+
+/**
+ * Mongoose Setup
+ */
 mongoose.set('useFindAndModify', false)
 
 const MONGODB_URI =
@@ -29,6 +38,10 @@ mongoose
   .catch(error => {
     console.log('error connection to MongoDB:', error.message)
   })
+
+/**
+ * Type Definitions
+ */
 
 const typeDefs = gql`
   type Book {
@@ -75,6 +88,10 @@ const typeDefs = gql`
     editAuthor(name: String!, setBornTo: Int!): Author
     createUser(username: String!, favoriteGenre: String!): User
     login(username: String!, password: String!): Token
+  }
+
+  type Subscription {
+    newBook: Book!
   }
 `
 
@@ -158,13 +175,28 @@ const resolvers = {
         book.author = authorExists._id
       }
 
-      const savedBook = await book.save().catch(error => {
+      let savedBook = await book.save().catch(error => {
         throw new UserInputError(error.message, {
           invalidArgs: args
         })
       })
 
-      return savedBook.populate('author').execPopulate()
+      /**
+       * publish command received by PubSub which pushes
+       * it to GraphQL execution engine
+       * a notification about the operation (book addition) is sent
+       * to all subscribers
+       */
+
+      /**
+       * @param first: triggerName - which subscription do we want to trigger?
+       * @param second: payload - object
+       */
+
+      savedBook = savedBook.populate('author').execPopulate()
+      pubsub.publish('NEW_BOOK', { newBook: savedBook })
+
+      return savedBook
     },
     editAuthor: async (root, args, { currentUser }) => {
       if (!currentUser) {
@@ -213,6 +245,15 @@ const resolvers = {
       // return jwt token if user-pass pair matches
       return { value: jwt.sign(userForToken, JWT_SECRET) }
     }
+  },
+
+  Subscription: {
+    /**
+     * the bookAdded resolver returns an iterator object to all subscribers
+     */
+    newBook: {
+      subscribe: () => pubsub.asyncIterator(['NEW_BOOK'])
+    }
   }
 }
 
@@ -232,6 +273,7 @@ const server = new ApolloServer({
   }
 })
 
-server.listen().then(({ url }) => {
+server.listen().then(({ url, subscriptionsUrl }) => {
   console.log(`Server ready at ${url}`)
+  console.log(`Subscriptions ready at ${subscriptionsUrl}`)
 })
