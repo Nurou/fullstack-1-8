@@ -39,6 +39,8 @@ mongoose
     console.log('error connection to MongoDB:', error.message)
   })
 
+mongoose.set('debug', true)
+
 /**
  * Type Definitions
  */
