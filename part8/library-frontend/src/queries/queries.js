@@ -28,12 +28,12 @@ export const ALL_AUTHORS = gql`
   }
 `
 export const ALL_BOOKS = gql`
-  ${BookDetailsFragment}
   {
     allBooks {
       ...BookDetails
     }
   }
+  ${BookDetailsFragment}
 `
 export const CURRENT_USER = gql`
   {
@@ -46,7 +46,6 @@ export const CURRENT_USER = gql`
 `
 
 export const CREATE_BOOK = gql`
-  ${BookDetailsFragment}
   mutation createBook(
     $title: String!
     $author: String!
@@ -62,6 +61,7 @@ export const CREATE_BOOK = gql`
       ...BookDetails
     }
   }
+  ${BookDetailsFragment}
 `
 export const UPDATE_AUTHOR = gql`
   mutation updateAuthor($name: String!, $setBornTo: Int!) {
@@ -70,4 +70,13 @@ export const UPDATE_AUTHOR = gql`
       born
     }
   }
+`
+
+export const NEW_BOOK = gql`
+  subscription {
+    newBook {
+      ...BookDetails
+    }
+  }
+  ${BookDetailsFragment}
 `

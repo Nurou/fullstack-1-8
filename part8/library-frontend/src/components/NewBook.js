@@ -1,6 +1,17 @@
 import React, { useState } from 'react'
-import { useMutation } from '@apollo/react-hooks'
-import { CREATE_BOOK, ALL_BOOKS, ALL_AUTHORS } from '../queries/queries'
+import {
+  useQuery,
+  useMutation,
+  useSubscription,
+  useApolloClient
+} from '@apollo/react-hooks'
+
+import {
+  CREATE_BOOK,
+  ALL_BOOKS,
+  ALL_AUTHORS,
+  NEW_BOOK
+} from '../queries/queries'
 
 const NewBook = props => {
   const [errorMessage, setErrorMessage] = useState(null)
@@ -23,6 +34,12 @@ const NewBook = props => {
   const [published, setPublished] = useState('')
   const [genre, setGenre] = useState('')
   const [genres, setGenres] = useState([])
+
+  useSubscription(NEW_BOOK, {
+    onSubscriptionData: ({ subscriptionData }) => {
+      console.log(subscriptionData)
+    }
+  })
 
   if (!props.show) {
     return null

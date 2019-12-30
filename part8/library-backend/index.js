@@ -194,6 +194,8 @@ const resolvers = {
        */
 
       savedBook = savedBook.populate('author').execPopulate()
+
+      // when the mutation occurs, the data is published to subscribers
       pubsub.publish('NEW_BOOK', { newBook: savedBook })
 
       return savedBook
