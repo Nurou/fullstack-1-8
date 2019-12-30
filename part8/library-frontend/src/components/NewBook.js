@@ -35,9 +35,20 @@ const NewBook = props => {
   const [genre, setGenre] = useState('')
   const [genres, setGenres] = useState([])
 
+  // bi-directional channel setup on initial render
   useSubscription(NEW_BOOK, {
     onSubscriptionData: ({ subscriptionData }) => {
-      console.log(subscriptionData)
+      const {
+        data: {
+          newBook: {
+            title,
+            author: { name },
+            published
+          }
+        }
+      } = subscriptionData
+
+      window.alert(`The book ${title}(${published}) by ${name} was added.`)
     }
   })
 

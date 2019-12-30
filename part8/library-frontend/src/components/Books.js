@@ -1,13 +1,19 @@
 import React, { useState, useEffect } from 'react'
-import { useQuery } from '@apollo/react-hooks'
-import { ALL_BOOKS } from '../queries/queries'
+import { useQuery, useMutation } from '@apollo/react-hooks'
+import { ALL_BOOKS, DELETE_BOOK, ALL_AUTHORS } from '../queries/queries'
 
 const Books = props => {
   // runs automatically on each each render
   const { loading, error, data } = useQuery(ALL_BOOKS)
 
+  const [deleteBook] = useMutation(DELETE_BOOK, {
+    refetchQueries: [{ query: ALL_BOOKS }, { query: ALL_AUTHORS }]
+  })
+
   // all genres
   const [genres, setGenres] = useState([])
+
+  const [title, setTitle] = useState('')
 
   // selected genre
   const [selectedGenre, setSelectedGenre] = useState('all genres')
@@ -29,26 +35,52 @@ const Books = props => {
     return null
   }
 
+  const handleClick = async props => {
+    const confirmed = window.confirm(
+      `Are you sure you want to delete the book ${props}?`
+    )
+
+    confirmed &&
+      (await deleteBook({
+        variables: { title: props }
+      }))
+  }
+
   const displayByFilter = () => {
     // no specific genre selected
     if (!selectedGenre || selectedGenre === 'all genres') {
-      return data.allBooks.map(book => (
-        <tr key={book.title.toString()} className='bg-grey-100'>
-          <td className='border px-4 py-2'>{book.title}</td>
-          <td className='border px-4 py-2'>{book.author.name}</td>
-          <td className='border px-4 py-2'>{book.published}</td>
-        </tr>
+      return data.allBooks.map((book, index) => (
+        <>
+          <tr key={book.title.toString()} className='bg-grey-100'>
+            <td className='border px-4 py-2'>
+              {book.title}
+              <br />
+              <button
+                key={index}
+                value={book.title}
+                className='inline-block border-solid border-4 border-red-600'
+                onClick={({ target }) => handleClick(target.value)}
+              >
+                Remove
+              </button>
+            </td>
+            <td className='border px-4 py-2'>{book.author.name}</td>
+            <td className='border px-4 py-2'>{book.published}</td>
+          </tr>
+        </>
       ))
     }
 
     return data.allBooks
       .filter(b => b.genres.includes(selectedGenre))
       .map(book => (
-        <tr key={book.title.toString()} className='bg-grey-100'>
-          <td className='border px-4 py-2'>{book.title}</td>
-          <td className='border px-4 py-2'>{book.author.name}</td>
-          <td className='border px-4 py-2'>{book.published}</td>
-        </tr>
+        <>
+          <tr key={book.title.toString()} className='bg-grey-100'>
+            <td className='border px-4 py-2'>{book.title}</td>
+            <td className='border px-4 py-2'>{book.author.name}</td>
+            <td className='border px-4 py-2'>{book.published}</td>
+          </tr>
+        </>
       ))
   }
 
@@ -76,6 +108,8 @@ const Books = props => {
           {genre}
         </button>
       ))}
+      <br />
+      <pre>{title}</pre>
     </div>
   )
 }

@@ -63,6 +63,16 @@ export const CREATE_BOOK = gql`
   }
   ${BookDetailsFragment}
 `
+
+export const DELETE_BOOK = gql`
+  mutation deleteBook($title: String!) {
+    deleteBook(title: $title) {
+      ...BookDetails
+    }
+  }
+  ${BookDetailsFragment}
+`
+
 export const UPDATE_AUTHOR = gql`
   mutation updateAuthor($name: String!, $setBornTo: Int!) {
     editAuthor(name: $name, setBornTo: $setBornTo) {

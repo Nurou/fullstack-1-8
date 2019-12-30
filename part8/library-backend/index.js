@@ -85,6 +85,7 @@ const typeDefs = gql`
       published: Int!
       genres: [String!]!
     ): Book
+    deleteBook(title: String!): Book
     editAuthor(name: String!, setBornTo: Int!): Author
     createUser(username: String!, favoriteGenre: String!): User
     login(username: String!, password: String!): Token
@@ -200,6 +201,16 @@ const resolvers = {
 
       return savedBook
     },
+    deleteBook: async (root, args, { currentUser }) => {
+      if (!currentUser) {
+        throw new AuthenticationError('not authenticated')
+      }
+
+      const deletedBook = await Book.findOneAndDelete({ title: args.title })
+
+      return deletedBook.populate('author').execPopulate()
+    },
+
     editAuthor: async (root, args, { currentUser }) => {
       if (!currentUser) {
         throw new AuthenticationError('not authenticated')
